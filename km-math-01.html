@@ -341,18 +341,21 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 
 → <strong>C = 5</strong> 確定。</p></div>
     <div id="q0-s1" class="exp-box blue" style="display:none"><h4>Step 2　1行目の十の位から A の条件を導く</h4><p>C=5 なので掛けられる数は AB5。
-AB5×2 の十の位：(2B+1) の一の位 = A（繰り上がり1はC×2=10から）
+AB5×2 の十の位を考えます。
+C×2=10 なので一の位は0，十の位へ1繰り上がります。
+つぎに B×2+1（繰り上がり分）を計算し，その一の位が A になります。
 
-→ <strong>(2B+1) mod 10 = A</strong>　…①</p></div>
+→ <strong>2B+1 の一の位 = A</strong>　…①</p></div>
     <div id="q0-s2" class="exp-box" style="display:none"><h4>Step 3　2行目 AB5×5 = B□AC から条件追加</h4><p>AB5×5：一の位 5×5=25 → 末尾5=C ✓，繰り上がり2。
-十の位：(5B+2) の一の位 = A，最上位が B。
+十の位：B×5+2（繰り上がり分）を計算し，その一の位が A になります。最上位が B。
 
-→ <strong>(5B+2) mod 10 = A</strong>　…②</p></div>
-    <div id="q0-s3" class="exp-box amber" style="display:none"><h4>Step 4　①②の連立で B・A を確定</h4><p>①=② より：
-　(2B+1) ≡ (5B+2) (mod 10)
-　→ 3B ≡ 9　→ <strong>B = 3</strong>
+→ <strong>5B+2 の一の位 = A</strong>　…②</p></div>
+    <div id="q0-s3" class="exp-box amber" style="display:none"><h4>Step 4　①②の連立で B・A を確定</h4><p>①と②はどちらも「一の位が A」という条件なので，等しくなります。
+2B+1 の一の位 = 5B+2 の一の位
+→ 両者の差 3B+1 の一の位が 0 → 3B+1 は 10 の倍数
+→ 3B = 9　→ <strong>B = 3</strong>
 
-① に代入：A = (2×3+1) mod 10 = <strong>7</strong>
+① に B=3 を代入：2×3+1 = 7 → 一の位は <strong>7</strong>　→ A = <strong>7</strong>
 
 → A=7，B=3，C=5 が確定。</p></div>
     <div id="q0-s4" class="exp-box pink" style="display:none"><h4>Step 5　検証して答えを出す</h4><p>ABC = 735 で全行を確認：
@@ -444,10 +447,9 @@ A+B−C = 7+3−5 = <strong>5</strong>　　正解：選択肢 <strong>1</strong
     <div id="q1-s0" class="exp-box" style="display:none"><h4>Step 1　積の桁数と B＜A の条件を確認する</h4><p>AB×C が3桁 → AB×C ≥ 100。
 積の百の位=B，十の位=A なので，百の位＜十の位 → <strong>B ＜ A</strong>。</p></div>
     <div id="q1-s1" class="exp-box blue" style="display:none"><h4>Step 2　十の位の条件を方程式にする</h4><p>積の十の位 = A なので：
-　(A×C + 繰り上がり) の一の位 = A
-　→ A(C−1) ≡ −繰り上がり (mod 10)
+　A×C＋繰り上がりを計算し，その一の位が A になります。
 
-C=9 のとき，B×9 の繰り上がりも含めて試行します。</p></div>
+C=9 のとき，B×9 の繰り上がりも含めて実際に試行します。</p></div>
     <div id="q1-s2" class="exp-box" style="display:none"><h4>Step 3　C=9 で AB を試行する</h4><p>AB×9 = BA□ を満たす2桁数 AB を探します（B＜A）。
 
 　87 × 9 = 783：百位7=B，十位8=A ✓（B=7＜A=8 ✓）
@@ -484,7 +486,7 @@ A + C − B = 8 + 9 − 7 = <strong>10</strong>
       <div class="calc-row fin"><div class="cell bl">□</div><div class="cell vA">A</div><div class="cell bl">□</div></div>
     </div>
     <button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button>
-    <div class="hint-box" id="h2">積の十の位が A になる条件：(A×B＋繰り上がり) の一の位 = A。整理すると A(B−1) ≡ −繰り上がり (mod 10) です。B の候補を 2〜9 で絞りましょう。</div>
+    <div class="hint-box" id="h2">積の十の位が A になる条件：A×B＋繰り上がりを計算して，その一の位が A になるような B を 2〜9 で探しましょう。</div>
     <div id="t2" class="timer-wrap">
       <div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div>
       <div class="timer-msg">自力で考えましょう。<span class="goal">目標 4分以内</span></div>
@@ -497,7 +499,7 @@ A + C − B = 8 + 9 − 7 = <strong>10</strong>
       <button class="ch" onclick="ans('q2',4,4)"><span class="cnum">5</span>9</button>
     </div>
     <div id="q2-res" style="display:none">
-      <div class="point-box"><strong>解法のカギ</strong>十の位条件 A(B−1) ≡ −繰り上がり (mod 10) を使い，B=4 のとき A=3 が導かれる。</div>
+      <div class="point-box"><strong>解法のカギ</strong>十の位条件「A×B＋繰り上がりの一の位 = A」を使い，B=4 のとき A=3 が導かれる。</div>
       <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row">
         <button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2m','A')">✅ A<span>わかった</span></button>
         <button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2m','B')">📖 B<span>解説でわかった</span></button>
@@ -519,11 +521,12 @@ A + C − B = 8 + 9 − 7 = <strong>10</strong>
     <div id="q2-s0" class="exp-box" style="display:none"><h4>Step 1　積が3桁になる B の範囲</h4><p>AB×B が3桁（100〜999）になるには B ≥ 2（B=1 だと AB×1=AB で2桁）。
 候補：B ∈ {2, 3, 4, 5, 6, 7, 8, 9}。</p></div>
     <div id="q2-s1" class="exp-box blue" style="display:none"><h4>Step 2　十の位の条件を方程式にする</h4><p>積の十の位 = A なので：
-　(A×B + c₁) の一の位 = A　（c₁ = floor(B²/10)）
-　→ A(B−1) ≡ −c₁ (mod 10)　…①
+　A×B＋c₁（一の位からの繰り上がり）を計算し，その一の位が A になります。
 
-B=4：B²=16，c₁=1。
-①：A×3 ≡ −1 ≡ 9 (mod 10) → <strong>A = 3</strong>（3×3=9 ✓）。</p></div>
+B=4 のとき B²=16，c₁=1（繰り上がり）。
+A×4＋1 の一の位 = A
+→ A×3＋1 の一の位 = 0　→ A×3 の一の位 = 9
+→ <strong>A = 3</strong>（3×3=9 ✓）。　…①</p></div>
     <div id="q2-s2" class="exp-box" style="display:none"><h4>Step 3　他の B も確認する</h4><p>B=2：c₁=0，A×1≡0 → A=0 ✗
 B=3：c₁=0，A×2≡0 → A=0 or 5
 　A=5 → 53×3=159，十位5=A ✓ → 別解（A=5,B=3,A+B=8）。
@@ -598,7 +601,7 @@ A + B = 3 + 4 = <strong>7</strong>
       <button class="ch" onclick="ans('q3',4,1)"><span class="cnum">5</span>8</button>
     </div>
     <div id="q3-res" style="display:none">
-      <div class="point-box"><strong>解法のカギ</strong>積が 1A2B。百の位条件 (2A+繰り上がり) mod 10 = A から A が一意に決まる。</div>
+      <div class="point-box"><strong>解法のカギ</strong>積が 1A2B。2A＋繰り上がりの一の位 = A という条件から A が一意に決まる。</div>
       <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row">
         <button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3m','A')">✅ A<span>わかった</span></button>
         <button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3m','B')">📖 B<span>解説でわかった</span></button>
@@ -618,10 +621,10 @@ A + B = 3 + 4 = <strong>7</strong>
       </div>
     </div>
     <div id="q3-s0" class="exp-box" style="display:none"><h4>Step 1　積が4桁 → A ≥ 5 を確認</h4><p>ABC×2 = 1A2B（4桁）なので ABC ∈ 500〜999 → <strong>A ≥ 5</strong>。</p></div>
-    <div id="q3-s1" class="exp-box blue" style="display:none"><h4>Step 2　百の位の条件から A を確定する</h4><p>積の百の位 = A：(2A + 繰り上がり c) の一の位 = A
-→ A ≡ −c (mod 10)
+    <div id="q3-s1" class="exp-box blue" style="display:none"><h4>Step 2　百の位の条件から A を確定する</h4><p>積の百の位 = A なので，2A＋繰り上がり c を計算し，その一の位が A になります。
 
-c=0 → A=0 ✗　　c=1 → A=9 ✓（A≥5 も満たす）
+c=0 のとき：2A の一の位 = A → A=0 ✗（A≥5 を満たさない）
+c=1 のとき：2A＋1 の一の位 = A → A＋1 の一の位 = 0 → A=9 ✓
 
 → <strong>A = 9</strong> 確定，c=1（十の位以下で桁上がりが発生）。</p></div>
     <div id="q3-s2" class="exp-box" style="display:none"><h4>Step 3　十の位の条件から B を求める</h4><p>積の十の位 = 2：(2B + c₁) の一の位 = 2。
@@ -629,7 +632,7 @@ c=1 より 2B+c₁ ∈ {10〜19}。
 
 B=6，c₁=0 → 2×6=12 ✓（一の位2，繰り上がり1=c ✓）。
 c₁=0 → 2C&lt;10 → C≤4。</p></div>
-    <div id="q3-s3" class="exp-box amber" style="display:none"><h4>Step 4　C を確定して検証する</h4><p>B=(2C) mod 10=6 → 2C=6 → C=3 ✓（3≤4 ✓）。
+    <div id="q3-s3" class="exp-box amber" style="display:none"><h4>Step 4　C を確定して検証する</h4><p>2C の一の位 = B = 6 → 2C=6 → C=3 ✓（3≤4 ✓）。
 
 963 × 2 = 1926　→ 1A2B = 1926 ✓
 
