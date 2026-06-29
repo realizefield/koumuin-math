@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KQU10 a≠1の平方完成</title>
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+:root{
+  --primary:#0f766e;--primary-d:#0d5c56;--primary-l:#f0fdfa;
+  --hint:#f59e0b;--hint-bg:#fffbeb;--warn:#dc2626;--warn-bg:#fef2f2;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --green:#059669;--green-l:#f0fdf4;--blue:#0284c7;--blue-l:#eff6ff;
+  --red:#dc2626;--orange:#ea580c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'BIZ UDPGothic',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:2;padding-bottom:60px;overflow-x:hidden}
+header{position:sticky;top:0;background:var(--primary);color:#fff;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10}
+header h1{margin:0;font-size:1.05em;font-weight:700}
+header .sub{font-size:.78em;opacity:.88;margin-top:2px}
+.steps{display:flex;background:#fff;border-bottom:1px solid var(--border)}
+.step{flex:1;text-align:center;padding:8px 4px;font-size:.78em;font-weight:700;color:var(--muted);border-bottom:3px solid var(--border)}
+.step.active{color:var(--primary);border-color:var(--primary)}
+.wrap{max-width:680px;margin:0 auto;padding:16px 16px 40px}
+.section{background:var(--card);border-radius:12px;padding:20px 22px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid var(--border)}
+.section h2{margin:0 0 16px;font-size:1.05em;color:var(--primary-d);border-left:4px solid var(--primary);padding-left:10px;line-height:1.5}
+.tip{background:var(--hint-bg);border-left:4px solid var(--hint);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.93em;line-height:1.9}
+.tip b{color:#92400e}
+.warn-box{background:var(--warn-bg);border-left:4px solid var(--warn);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.93em;line-height:1.9}
+.point-box{background:var(--green-l);border:2px solid var(--green);border-radius:10px;padding:16px 18px;margin:16px 0}
+.point-box h4{margin:0 0 10px;color:var(--green);font-size:.95em;font-weight:700}
+.blue-box{background:var(--blue-l);border-left:4px solid var(--blue);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.93em;line-height:1.9}
+.blue-box b{color:var(--blue)}
+.example{background:var(--primary-l);border-left:4px solid var(--primary);border-radius:8px;padding:14px 16px;margin:14px 0}
+.example .ex-title{font-weight:700;color:var(--primary-d);margin-bottom:10px;font-size:.97em}
+.calc-box{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.95em;line-height:2.5}
+.calc-note{font-size:.82em;color:var(--muted);margin-left:6px}
+.step-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.step-num{min-width:34px;height:34px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9em;flex-shrink:0;margin-top:2px}
+.step-body{flex:1;background:#f8fafc;border-radius:10px;padding:12px 14px;border:1px solid var(--border);font-size:.93em;line-height:1.9}
+.step-body .step-title{font-weight:700;color:var(--primary-d);margin-bottom:6px}
+.step-body .sub-note{font-size:.85em;color:var(--muted);margin-top:6px;line-height:1.7}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.compare-box{border-radius:10px;padding:14px 16px;border:2px solid var(--border)}
+.compare-box.left{border-color:#94a3b8;background:#f8fafc}
+.compare-box.right{border-color:var(--primary);background:var(--primary-l)}
+.compare-box h4{font-size:.88em;font-weight:700;margin-bottom:10px;text-align:center;padding-bottom:6px;border-bottom:1px dashed var(--border)}
+.compare-box.left h4{color:#64748b}
+.compare-box.right h4{color:var(--primary-d)}
+.ng-box{background:#fff7ed;border:2px solid var(--orange);border-radius:10px;padding:14px 16px;margin:14px 0}
+.ng-box h4{color:var(--orange);font-size:.92em;font-weight:700;margin-bottom:8px}
+table.summary{border-collapse:collapse;width:100%;margin:12px 0;font-size:.9em}
+table.summary th{background:var(--primary);color:#fff;padding:9px 8px;text-align:center}
+table.summary td{padding:9px 8px;border:1px solid var(--border);vertical-align:middle;line-height:1.8}
+table.summary tr:nth-child(even) td{background:var(--primary-l)}
+.nav{display:flex;gap:10px;margin-top:22px}
+.btn{display:block;padding:13px 16px;border-radius:10px;text-decoration:none;text-align:center;font-weight:700;font-size:.95em;flex:1}
+.btn-back{background:#f1f5f9;color:var(--muted)}
+.btn-next{background:var(--primary);color:#fff}
+.hl-red{background:#fef2f2;color:var(--red);font-weight:700;border-radius:3px;padding:0 3px}
+.hl-grn{background:var(--green-l);color:var(--green);font-weight:700;border-radius:3px;padding:0 3px}
+.hl-blu{background:var(--blue-l);color:var(--blue);font-weight:700;border-radius:3px;padding:0 3px}
+
+/* ══ 折り畳みミニテスト ══ */
+.mini-toggle-btn{
+  width:100%;margin-top:18px;padding:13px 18px;
+  background:linear-gradient(135deg,#fffbeb,#fef3c7);
+  border:2px solid var(--hint);border-radius:12px;
+  font-family:'BIZ UDPGothic',sans-serif;font-size:.97em;font-weight:700;
+  color:#92400e;cursor:pointer;text-align:left;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .2s,box-shadow .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mini-toggle-btn:hover{background:linear-gradient(135deg,#fef3c7,#fde68a);box-shadow:0 2px 8px rgba(245,158,11,.2)}
+.mini-toggle-btn .left-part{display:flex;align-items:center;gap:8px}
+.mini-toggle-btn .icon{font-size:1.1em}
+.mini-toggle-btn .arrow{font-size:1.2em;transition:transform .3s;display:inline-block}
+.mini-toggle-btn.open .arrow{transform:rotate(90deg)}
+.mini-prog-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:#fff;border:1.5px solid var(--hint);
+  border-radius:20px;padding:2px 10px;font-size:.8em;
+  color:#92400e;font-weight:700;
+}
+
+.mini-body{
+  display:none;
+  background:linear-gradient(135deg,#fffbeb 0%,#f0fdf4 100%);
+  border:2px solid var(--hint);border-top:none;
+  border-radius:0 0 12px 12px;
+  padding:16px 18px;
+}
+.mini-body.open{display:block}
+
+/* ミニ問題カード */
+.mq-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.mq-card.solved{border-color:var(--green);background:#f0fdf4}
+.mq-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--hint);color:#fff;border-radius:50%;font-size:12px;font-weight:700;margin-right:6px;flex-shrink:0}
+.mq-q{font-size:.93em;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.8;display:flex;align-items:flex-start}
+.mq-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.mq-btn{
+  padding:11px 8px;border-radius:8px;border:1.5px solid var(--border);
+  background:#fff;font-family:'BIZ UDPGothic',sans-serif;font-size:.88em;
+  cursor:pointer;text-align:center;transition:.15s;line-height:1.6;
+  -webkit-tap-highlight-color:transparent;
+}
+.mq-btn:hover:not(:disabled){border-color:var(--hint);background:#fffbeb}
+.mq-btn.correct{border-color:var(--green)!important;background:var(--green-l)!important;color:#065f46;font-weight:700}
+.mq-btn.wrong{border-color:var(--red)!important;background:#fef2f2!important;color:var(--red)}
+.mq-btn.reveal{border-color:var(--green)!important;background:var(--green-l)!important;color:#065f46;font-weight:700}
+.mq-btn:disabled{cursor:default}
+.mq-result{display:none;border-radius:8px;padding:10px 14px;margin-top:6px;font-size:.91em;line-height:2}
+.mq-result.ok{background:var(--green-l);border:1.5px solid var(--green);color:#065f46}
+.mq-result.ng{background:#fef2f2;border:1.5px solid var(--red);color:#991b1b}
+.mq-result.show{display:block}
+
+/* 解説ステップ（詳しい解説用） */
+.expl-box{margin-top:10px;background:#fff;border-radius:8px;border:1px solid var(--border);padding:12px 14px;font-size:.88em;line-height:2.3}
+.expl-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px}
+.expl-step{min-width:22px;height:22px;background:var(--green);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75em;font-weight:700;flex-shrink:0;margin-top:3px}
+.expl-note{font-size:.82em;color:var(--muted);margin-left:4px}
+.expl-key{background:#fef9c3;border-radius:3px;padding:0 3px;color:#92400e;font-weight:700}
+.retry-btn{display:inline-block;margin-top:8px;padding:5px 14px;background:#fff;border:1.5px solid var(--border);border-radius:8px;font-size:.82em;cursor:pointer;font-family:'BIZ UDPGothic',sans-serif;color:var(--muted);transition:.15s}
+.retry-btn:hover{border-color:var(--hint);color:var(--hint)}
+
+/* 仕上げ練習（大） */
+.quiz-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.quiz-card.solved{border-color:var(--green);background:#f0fdf4}
+.quiz-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--primary);color:#fff;border-radius:50%;font-size:13px;font-weight:700;margin-right:8px;flex-shrink:0}
+.quiz-q{font-size:.97em;font-weight:700;color:var(--text);margin-bottom:14px;line-height:1.8;display:flex;align-items:flex-start}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.choice-btn{padding:12px 10px;border-radius:10px;border:2px solid var(--border);background:#fff;font-family:'BIZ UDPGothic',sans-serif;font-size:.92em;cursor:pointer;text-align:center;transition:.15s;line-height:1.6;-webkit-tap-highlight-color:transparent;}
+.choice-btn:hover:not(:disabled){border-color:var(--primary);background:var(--primary-l)}
+.choice-btn.correct{border-color:var(--green)!important;background:var(--green-l)!important;color:#065f46;font-weight:700}
+.choice-btn.wrong{border-color:var(--red)!important;background:#fef2f2!important;color:var(--red)}
+.choice-btn.reveal{border-color:var(--green)!important;background:var(--green-l)!important;color:#065f46;font-weight:700}
+.choice-btn:disabled{cursor:default}
+.quiz-result{display:none;border-radius:8px;padding:10px 14px;margin-top:6px;font-size:.93em;line-height:2}
+.quiz-result.ok{background:var(--green-l);border:1.5px solid var(--green);color:#065f46}
+.quiz-result.ng{background:#fef2f2;border:1.5px solid var(--red);color:#991b1b}
+.quiz-result.show{display:block}
+.progress-bar{height:6px;background:#e2e8f0;border-radius:3px;margin-bottom:18px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,var(--primary),var(--green));border-radius:3px;transition:width .4s}
+.progress-label{font-size:.82em;color:var(--muted);margin-bottom:6px;text-align:right}
+
+/* 花吹雪 */
+#confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<header>
+  <h1>KQU10　a ≠ 1 の平方完成</h1>
+  <div class="sub">公務員初級 ── x²の係数が 1 以外のときの平方完成</div>
+</header>
+<div class="steps">
+  <div class="step active">① 解説</div>
+  <div class="step">② 例題</div>
+  <div class="step">③ 練習</div>
+  <div class="step">④ 確認</div>
+</div>
+<div class="wrap">
+
+<!-- ══ 1．復習 ══ -->
+<div class="section">
+  <h2>1．まず復習 ── a＝1 のときの平方完成（KQU03）</h2>
+  <p>KQU03 では x² の係数が <strong>1</strong> のときを練習しました。まず確認しておきましょう。</p>
+  <div class="blue-box"><b>📖 平方完成とは？</b><br>一般形 y＝ax²＋bx＋c を、頂点がひと目でわかる<strong>標準形 y＝a(x－p)²＋q</strong> の形に変形することです。</div>
+  <div class="example">
+    <div class="ex-title">📌 復習例　y＝x²－6x＋10 を平方完成して頂点を求めよ</div>
+    <div class="calc-box">
+      y ＝ <span id="rev1"></span><br>
+      ＝ <span id="rev2"></span> <span class="calc-note">← x の係数 −6 の半分 −3 を2乗して足して引く</span><br>
+      ＝ <span id="rev3"></span> <span class="calc-note">← 前の3項を因数分解（完全平方式）</span><br>
+      ＝ <span id="rev4"></span> <span class="calc-note">← −9＋10＝1</span>
+    </div>
+    <p>→ 頂点は <strong style="color:var(--primary)">(3, 1)</strong></p>
+  </div>
+  <div class="point-box">
+    <h4>✅ a＝1 のときのコツ（公式）</h4>
+    <div style="text-align:center;margin:10px 0" id="rev_formula"></div>
+    <p style="font-size:.9em;text-align:center;color:var(--muted)">x の係数（b）の <strong>半分を2乗</strong> して足し引きするだけ</p>
+  </div>
+  <div class="tip"><b>💡 今回のテーマ</b><br>x² の係数が <strong class="hl-red">2・3・－1</strong> など「1以外」の場合は<strong>「もう1手順を最初に加えるだけ」</strong>で解けます！</div>
+</div>
+
+<!-- ══ 2．なぜ違う？ ══ -->
+<div class="section">
+  <h2>2．a≠1 だと何が問題になるの？</h2>
+  <p>例えば <span id="prob_ex"></span> をそのまま平方完成しようとすると…</p>
+  <div class="ng-box">
+    <h4>❌ よくある間違い（NG例）</h4>
+    <div class="calc-box" style="background:#fff;border-color:#fed7aa" id="ng_calc"></div>
+    <p style="font-size:.9em;margin-top:8px;color:var(--orange)">⚠ 展開して確認すると元の式に戻りません。係数 <strong>2</strong> があるせいでずれています。</p>
+  </div>
+  <div class="tip"><b>💡 なぜずれるのか？</b><br>平方完成の公式は「x² の係数が <strong>1</strong>」のときだけ使えます。<br>係数が 2 ならまず <strong>2 でくくり出して</strong> から平方完成します。</div>
+</div>
+
+<!-- ══ 3．3ステップ ══ -->
+<div class="section">
+  <h2>3．a≠1 のときの3ステップ</h2>
+  <div class="compare">
+    <div class="compare-box left">
+      <h4>a＝1 のとき（KQU03）</h4>
+      <div style="font-size:.88em;line-height:2" id="cmp_left"></div>
+    </div>
+    <div class="compare-box right">
+      <h4>a≠1 のとき（今回！）</h4>
+      <div style="font-size:.88em;line-height:2" id="cmp_right"></div>
+    </div>
+  </div>
+  <div class="point-box">
+    <h4>✅ a≠1 のときの3ステップ</h4>
+    <div class="step-row" style="margin-top:10px">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">x² と x の項だけ <span class="hl-blu">a でくくり出す</span></div>
+        <div id="s1_ex"></div>
+        <div class="sub-note">⚠ <strong>定数項はくくらない！</strong> 外に出したままにします。</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">カッコの中だけを <span class="hl-grn">平方完成する</span>（KQU03 と同じ！）</div>
+        <div id="s2_ex"></div>
+        <div class="sub-note">カッコの中だけ見て、x の係数の半分を2乗して足し引き。</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">カッコを展開して <span class="hl-blu">a を分配</span> しまとめる</div>
+        <div id="s3_ex"></div>
+        <div class="sub-note" style="color:var(--red)">⚠ <strong>最重要！</strong> 引いた数（−4）に外の a（2）がかかります。2×(−4)＝<strong>−8</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4．例題① ＋ ミニテスト① ══ -->
+<div class="section">
+  <h2>4．例題①　a が正のとき ── y＝2x²－8x＋3</h2>
+  <div class="example">
+    <div class="ex-title">📌 例題①　y＝2x²－8x＋3 を平方完成して頂点を求めよ</div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">x²とxの項を <span class="hl-blu">2 でくくり出す</span></div>
+      <div id="e1_s1"></div>
+      <div class="sub-note">定数項 ＋3 はくくらず外に残します。</div>
+    </div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">カッコの中（x²－4x）を <span class="hl-grn">平方完成する</span></div>
+      <div id="e1_s2"></div>
+      <div class="sub-note">x の係数 −4 の半分 → <strong>−2</strong>　(−2)²＝<strong>4</strong> を足し引き</div>
+    </div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">前の3項を <span class="hl-grn">因数分解</span> する</div>
+      <div id="e1_s3"></div>
+    </div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">カッコの外の <span class="hl-blu">2 を分配</span> する</div>
+      <div id="e1_s4"></div>
+      <div class="sub-note" style="color:var(--red)">⚠ <strong>2×(−4)＝−8</strong>　ここのかけ忘れが最多ミス！</div>
+    </div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title">定数項を <span class="hl-grn">まとめる</span></div>
+      <div id="e1_s5"></div>
+      <div class="sub-note">−8＋3＝<strong>−5</strong>　→ 頂点の y 座標</div>
+    </div>
+  </div>
+  <div class="point-box">
+    <h4>✅ 答え</h4>
+    <div id="e1_ans" style="text-align:center;font-size:1.08em;padding:4px 0"></div>
+    <p style="text-align:center;margin-top:8px;font-size:.93em">頂点は <strong style="color:var(--primary)">(2, −5)</strong>　軸は x＝2</p>
+  </div>
+  <div class="calc-box" id="e1_check"></div>
+  <p style="font-size:.9em;color:var(--green);margin-top:4px">✅ 元の式 y＝2x²－8x＋3 に戻りました！</p>
+
+  <!-- ★ ミニテスト①（折り畳み） -->
+  <button class="mini-toggle-btn" id="tog1" onclick="toggleMini('mini1','tog1')">
+    <div class="left-part">
+      <span class="icon">✏️</span>
+      <span>ミニテスト① ── 例題①と同じタイプ（a が正）</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="mini-prog-badge" id="badge1">0 / 3 問</span>
+      <span class="arrow">›</span>
+    </div>
+  </button>
+  <div class="mini-body" id="mini1">
+    <div id="mini1_qs"></div>
+  </div>
+</div>
+
+<!-- ══ 5．例題② ＋ ミニテスト② ══ -->
+<div class="section">
+  <h2>5．例題②　a が負のとき ── y＝−3x²＋6x＋1</h2>
+  <div class="example">
+    <div class="ex-title">📌 例題②　y＝−3x²＋6x＋1 を平方完成して頂点を求めよ</div>
+  </div>
+  <p style="margin-bottom:12px">x² の係数は <strong class="hl-red">−3</strong>（負の数）です。<strong>マイナスでくくる</strong>ので符号に特に注意！</p>
+  <div class="step-row">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">x²とxの項を <span class="hl-red">−3 でくくり出す</span></div>
+      <div id="e2_s1"></div>
+      <div class="sub-note"><strong class="hl-red">符号に注意！</strong>　−3x²＋6x を −3 でくくると x の係数が <strong>−2 に変わります</strong>。</div>
+    </div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">カッコの中を <span class="hl-grn">平方完成</span> → <span class="hl-red">−3 を分配</span></div>
+      <div id="e2_s2"></div>
+      <div class="sub-note" style="color:var(--red)">⚠ <strong>−3×(−1)＝＋3</strong>　マイナス×マイナス＝プラス！</div>
+    </div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">定数項をまとめる</div>
+      <div id="e2_s3"></div>
+    </div>
+  </div>
+  <div class="point-box">
+    <h4>✅ 答え</h4>
+    <div id="e2_ans" style="text-align:center;font-size:1.08em;padding:4px 0"></div>
+    <p style="text-align:center;margin-top:8px;font-size:.93em">頂点は <strong style="color:var(--primary)">(1, 4)</strong></p>
+  </div>
+
+  <!-- ★ ミニテスト②（折り畳み） -->
+  <button class="mini-toggle-btn" id="tog2" onclick="toggleMini('mini2','tog2')">
+    <div class="left-part">
+      <span class="icon">✏️</span>
+      <span>ミニテスト② ── 例題②と同じタイプ（a が負）</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="mini-prog-badge" id="badge2">0 / 3 問</span>
+      <span class="arrow">›</span>
+    </div>
+  </button>
+  <div class="mini-body" id="mini2">
+    <div id="mini2_qs"></div>
+  </div>
+</div>
+
+<!-- ══ 6．例題③ ＋ ミニテスト③ ══ -->
+<div class="section">
+  <h2>6．例題③　分数が出る問題 ── 公務員試験レベル</h2>
+  <div class="example">
+    <div class="ex-title">📌 例題③　y＝2x²－6x＋1 を平方完成して頂点を求めよ</div>
+  </div>
+  <div class="tip"><b>💡 分数になるときも手順は同じ！</b><br>x の係数が奇数（−6）のときも、半分（−3/2）を2乗するだけです。落ち着いて計算しましょう。</div>
+  <div class="calc-box" id="e3_calc"></div>
+  <div class="point-box">
+    <h4>✅ 答え</h4>
+    <div id="e3_ans" style="text-align:center;font-size:1.05em;padding:4px 0"></div>
+    <p style="text-align:center;margin-top:6px;font-size:.92em">頂点は <span id="e3_vertex"></span></p>
+  </div>
+
+  <!-- ★ ミニテスト③（折り畳み） -->
+  <button class="mini-toggle-btn" id="tog3" onclick="toggleMini('mini3','tog3')">
+    <div class="left-part">
+      <span class="icon">✏️</span>
+      <span>ミニテスト③ ── 例題③と同じタイプ（分数が出る）</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="mini-prog-badge" id="badge3">0 / 3 問</span>
+      <span class="arrow">›</span>
+    </div>
+  </button>
+  <div class="mini-body" id="mini3">
+    <div id="mini3_qs"></div>
+  </div>
+</div>
+
+<!-- ══ 7．仕上げ練習 ══ -->
+<div class="section">
+  <h2>7．仕上げ練習 ── 総合4択問題</h2>
+  <p style="margin-bottom:6px;font-size:.93em;color:var(--muted)">3種類すべてのパターンから出題します。全問正解を目指そう！</p>
+  <div class="progress-label"><span id="prog-text">0 / 3 問正解</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div id="final_qs"></div>
+</div>
+
+<!-- ══ まとめ ══ -->
+<div class="section" style="background:var(--primary-l);border-color:#99f6e4">
+  <h2>📋 まとめ</h2>
+  <table class="summary">
+    <tr><th>手順</th><th>やること</th><th>注意点</th></tr>
+    <tr><td><strong>① くくり出す</strong></td><td>x²とxの項だけ a でくくる</td><td>定数項はくくらない！</td></tr>
+    <tr><td><strong>② 平方完成</strong></td><td>カッコ内で b/2 を2乗して足し引き</td><td>KQU03 と同じ方法</td></tr>
+    <tr><td><strong>③ 分配</strong></td><td>引いた数に <strong>a をかける</strong></td><td><span style="color:var(--red)">ここのかけ忘れが最多ミス！</span></td></tr>
+  </table>
+  <div class="warn-box" style="margin-top:14px"><b>⚠ 一番大切な確認</b><br>答えが出たら <strong>展開して元の式に戻るか検算</strong> する習慣をつけましょう！</div>
+  <div class="tip" style="margin-top:12px">次の単元 KQU11 では、<strong>x・y 両方向の平行移動の応用</strong>を学びます。</div>
+</div>
+
+<div class="nav">
+  <a href="../kounin_math_index_koumin.html" class="btn btn-back">← 単元一覧へ</a>
+  <a href="./KQU10_drill.html" class="btn btn-next">例題へ進む →</a>
+</div>
+</div>
+
+<script>
+function k(e){return katex.renderToString(e,{throwOnError:false,displayMode:false});}
+function kd(e){return katex.renderToString(e,{throwOnError:false,displayMode:true});}
+
+/* ── 解説レンダリング ── */
+document.getElementById('rev1').innerHTML=k('x^2-6x+10');
+document.getElementById('rev2').innerHTML=k('x^2-6x+(-3)^2-(-3)^2+10');
+document.getElementById('rev3').innerHTML=k('(x-3)^2-9+10');
+document.getElementById('rev4').innerHTML=k('(x-3)^2+1');
+document.getElementById('rev_formula').innerHTML=kd('y=x^2+bx+c=\\left(x+\\frac{b}{2}\\right)^2+c-\\left(\\frac{b}{2}\\right)^2');
+document.getElementById('prob_ex').innerHTML=k('y=2x^2-8x+3');
+document.getElementById('ng_calc').innerHTML=
+  '<span style="color:var(--orange)">（間違い）</span>　'+k('y=2x^2-8x+3')+'<br>'+
+  '＝ '+k('2x^2-8x+(-4)^2-(-4)^2+3')+'<br>'+
+  '＝ '+k('(2x^2-8x+16)-16+3')+'<br>'+
+  '＝ '+k('2(x-4)^2-13')+'　← <strong style="color:var(--red)">これは間違い！</strong>';
+document.getElementById('cmp_left').innerHTML=k('y=x^2-4x+1')+'<br>↓ そのまま平方完成<br>'+k('(x-2)^2-3');
+document.getElementById('cmp_right').innerHTML=k('y=2x^2-8x+3')+'<br>↓ <strong>①まず 2 をくくり出す</strong><br>'+k('2(x^2-4x)+3')+'<br>↓ ②平方完成　③分配';
+document.getElementById('s1_ex').innerHTML=kd('y=2(x^2-4x)+3');
+document.getElementById('s2_ex').innerHTML=kd('y=2\\{x^2-4x+(-2)^2-(-2)^2\\}+3');
+document.getElementById('s3_ex').innerHTML=kd('y=2\\{(x-2)^2-4\\}+3=2(x-2)^2-8+3=2(x-2)^2-5');
+document.getElementById('e1_s1').innerHTML=kd('y=2(x^2-4x)+3');
+document.getElementById('e1_s2').innerHTML=kd('y=2\\{x^2-4x+(-2)^2-(-2)^2\\}+3');
+document.getElementById('e1_s3').innerHTML=kd('y=2\\{(x-2)^2-4\\}+3');
+document.getElementById('e1_s4').innerHTML=kd('y=2(x-2)^2+2\\times(-4)+3=2(x-2)^2-8+3');
+document.getElementById('e1_s5').innerHTML=kd('y=2(x-2)^2-5');
+document.getElementById('e1_ans').innerHTML=k('y=2(x-2)^2-5');
+document.getElementById('e1_check').innerHTML=
+  '検算：'+k('2(x-2)^2-5')+'＝'+k('2(x^2-4x+4)-5')+'＝'+k('2x^2-8x+8-5')+'＝'+k('2x^2-8x+3')+'　← 元の式と一致 ✅';
+document.getElementById('e2_s1').innerHTML=kd('y=-3(x^2-2x)+1');
+document.getElementById('e2_s2').innerHTML=kd('-3\\{(x-1)^2-1\\}+1=-3(x-1)^2+(-3)\\times(-1)+1=-3(x-1)^2+3+1');
+document.getElementById('e2_s3').innerHTML=kd('y=-3(x-1)^2+4');
+document.getElementById('e2_ans').innerHTML=k('y=-3(x-1)^2+4');
+document.getElementById('e3_calc').innerHTML=
+  k('y=2x^2-6x+1')+'<br>＝ '+k('2(x^2-3x)+1')+'　← 2でくくる<br>'+
+  '＝ '+k('2\\left\\{\\left(x-\\dfrac{3}{2}\\right)^2-\\dfrac{9}{4}\\right\\}+1')+
+  '<br><span style="font-size:.85em;color:var(--muted)">x の係数 −3 の半分 ＝ −3/2　（−3/2）²＝9/4</span><br>'+
+  '＝ '+k('2\\left(x-\\dfrac{3}{2}\\right)^2-\\dfrac{9}{2}+1')+'<br>'+
+  '＝ '+k('2\\left(x-\\dfrac{3}{2}\\right)^2-\\dfrac{7}{2}');
+document.getElementById('e3_ans').innerHTML=k('y=2\\left(x-\\dfrac{3}{2}\\right)^2-\\dfrac{7}{2}');
+document.getElementById('e3_vertex').innerHTML='<strong style="color:var(--primary)">'+k('\\left(\\dfrac{3}{2},\\ -\\dfrac{7}{2}\\right)')+'</strong>';
+
+/* ══════════════════════════════
+   折り畳みトグル
+══════════════════════════════ */
+function toggleMini(bodyId, btnId){
+  var body=document.getElementById(bodyId);
+  var btn=document.getElementById(btnId);
+  var isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  btn.classList.toggle('open',!isOpen);
+}
+
+/* ══════════════════════════════
+   花吹雪
+══════════════════════════════ */
+var cvs=document.getElementById('confetti-canvas');
+var c2=cvs.getContext('2d');
+var parts=[];var animId=null;
+function resize(){cvs.width=window.innerWidth;cvs.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+function rndCol(){return['#0f766e','#4f46e5','#f59e0b','#059669','#dc2626','#0284c7','#ea580c','#9333ea'][Math.floor(Math.random()*8)];}
+function launchConfetti(){
+  for(var i=0;i<110;i++) parts.push({x:Math.random()*cvs.width,y:-10-Math.random()*50,w:7+Math.random()*7,h:4+Math.random()*4,color:rndCol(),vx:(Math.random()-.5)*4,vy:3+Math.random()*4,angle:Math.random()*Math.PI*2,spin:(Math.random()-.5)*.2,op:1});
+  if(!animId) animLoop();
+}
+function animLoop(){
+  c2.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.08;p.angle+=p.spin;p.op-=.009;c2.save();c2.globalAlpha=Math.max(0,p.op);c2.translate(p.x,p.y);c2.rotate(p.angle);c2.fillStyle=p.color;c2.fillRect(-p.w/2,-p.h/2,p.w,p.h);c2.restore();});
+  parts=parts.filter(function(p){return p.op>0&&p.y<cvs.height+50;});
+  if(parts.length>0){animId=requestAnimationFrame(animLoop);}else{animId=null;c2.clearRect(0,0,cvs.width,cvs.height);}
+}
+
+/* ══════════════════════════════
+   詳しい解説ステップ生成
+   steps: [{label, math, note}]
+══════════════════════════════ */
+function buildExplBox(steps, summary){
+  var html='<div class="expl-box">';
+  steps.forEach(function(s,i){
+    html+='<div class="expl-row"><div class="expl-step">'+(i+1)+'</div><div>';
+    html+='<strong>'+s.label+'</strong><br>';
+    html+=s.math;
+    if(s.note) html+='<br><span class="expl-note">'+s.note+'</span>';
+    html+='</div></div>';
+  });
+  if(summary) html+='<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-weight:700;color:var(--green)">✅ '+summary+'</div>';
+  html+='</div>';
+  return html;
+}
+
+/* ══════════════════════════════
+   ミニテストデータ（詳しい解説付き）
+══════════════════════════════ */
+var miniData={
+  m1:[
+    {
+      q:k('y=3x^2+12x+5')+'　を平方完成した式はどれか？',
+      choices:[k('3(x+2)^2-7'),k('3(x+2)^2+7'),k('3(x-2)^2-7'),k('3(x+2)^2-1')],
+      ans:0,
+      expl: buildExplBox([
+        {label:'3 でくくり出す（定数項 5 はくくらない）',
+         math:kd('y=3(x^2+4x)+5'),
+         note:'x²とxの係数だけくくる。＋5 は外に残す'},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=3\\{x^2+4x+(+2)^2-(+2)^2\\}+5'),
+         note:'x の係数 ＋4 の半分 ＝ ＋2　→　2²＝4 を足し引き'},
+        {label:'因数分解する',
+         math:kd('y=3\\{(x+2)^2-4\\}+5')},
+        {label:'3 を分配する（ここが重要！）',
+         math:kd('y=3(x+2)^2+3\\times(-4)+5=3(x+2)^2-12+5'),
+         note:'<span class="expl-key">3×(−4)＝−12</span>　← かけ忘れ注意！'},
+        {label:'定数項をまとめる',
+         math:kd('y=3(x+2)^2-7')}
+      ],'答え：'+k('3(x+2)^2-7')+'　→ 頂点は (−2, −7)')
+    },
+    {
+      q:k('y=2x^2+8x+1')+'　の頂点として正しいものはどれか？',
+      choices:['頂点 '+k('(-2,\\ -7)'),'頂点 '+k('(2,\\ -7)'),'頂点 '+k('(-2,\\ 7)'),'頂点 '+k('(4,\\ -7)')],
+      ans:0,
+      expl: buildExplBox([
+        {label:'2 でくくり出す',
+         math:kd('y=2(x^2+4x)+1')},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=2\\{(x+2)^2-4\\}+1'),
+         note:'x の係数 ＋4 の半分 ＝ ＋2、2²＝4'},
+        {label:'2 を分配してまとめる',
+         math:kd('y=2(x+2)^2-8+1=2(x+2)^2-7'),
+         note:'<span class="expl-key">2×(−4)＝−8</span>'}
+      ],'頂点は (−2, −7)　→ x＝−2のとき最小')
+    },
+    {
+      q:k('y=4x^2-8x+3')+'　の頂点として正しいものはどれか？',
+      choices:['頂点 '+k('(1,\\ -1)'),'頂点 '+k('(-1,\\ -1)'),'頂点 '+k('(1,\\ 1)'),'頂点 '+k('(2,\\ -1)')],
+      ans:0,
+      expl: buildExplBox([
+        {label:'4 でくくり出す',
+         math:kd('y=4(x^2-2x)+3')},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=4\\{(x-1)^2-1\\}+3'),
+         note:'x の係数 −2 の半分 ＝ −1、(−1)²＝1'},
+        {label:'4 を分配してまとめる',
+         math:kd('y=4(x-1)^2-4+3=4(x-1)^2-1'),
+         note:'<span class="expl-key">4×(−1)＝−4</span>'}
+      ],'頂点は (1, −1)')
+    }
+  ],
+  m2:[
+    {
+      q:k('y=-2x^2+4x+3')+'　を平方完成した式はどれか？',
+      choices:[k('-2(x-1)^2+5'),k('-2(x-1)^2-5'),k('-2(x+1)^2+5'),k('2(x-1)^2+5')],
+      ans:0,
+      expl: buildExplBox([
+        {label:'−2 でくくり出す',
+         math:kd('y=-2(x^2-2x)+3'),
+         note:'<span class="expl-key">−2x²＋4x を −2 でくくると (x²−2x) になる</span>　符号が変わる！'},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=-2\\{(x-1)^2-1\\}+3'),
+         note:'x の係数 −2 の半分 ＝ −1、(−1)²＝1'},
+        {label:'−2 を分配してまとめる',
+         math:kd('y=-2(x-1)^2+(-2)\\times(-1)+3=-2(x-1)^2+2+3'),
+         note:'<span class="expl-key">−2×(−1)＝＋2</span>　マイナス×マイナス＝プラス！'},
+        {label:'定数項をまとめる',
+         math:kd('y=-2(x-1)^2+5')}
+      ],'頂点は (1, 5)　a＜0 なので <strong>最大値</strong> をとる')
+    },
+    {
+      q:k('y=-x^2+6x-5')+'　の頂点として正しいものはどれか？',
+      choices:['頂点 '+k('(3,\\ 4)'),'頂点 '+k('(-3,\\ 4)'),'頂点 '+k('(3,\\ -4)'),'頂点 '+k('(6,\\ 4)')],
+      ans:0,
+      expl: buildExplBox([
+        {label:'−1 でくくり出す',
+         math:kd('y=-(x^2-6x)-5'),
+         note:'<span class="expl-key">−x²＋6x を −1 でくくると (x²−6x) になる</span>　符号が変わる！'},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=-\\{(x-3)^2-9\\}-5'),
+         note:'x の係数 −6 の半分 ＝ −3、(−3)²＝9'},
+        {label:'−1 を分配してまとめる',
+         math:kd('y=-(x-3)^2+9-5=-(x-3)^2+4'),
+         note:'<span class="expl-key">−1×(−9)＝＋9</span>'}
+      ],'頂点は (3, 4)')
+    },
+    {
+      q:k('y=-3x^2+12x-8')+'　の頂点として正しいものはどれか？',
+      choices:['頂点 '+k('(2,\\ 4)'),'頂点 '+k('(-2,\\ 4)'),'頂点 '+k('(2,\\ -4)'),'頂点 '+k('(4,\\ 4)')],
+      ans:0,
+      expl: buildExplBox([
+        {label:'−3 でくくり出す',
+         math:kd('y=-3(x^2-4x)-8'),
+         note:'−3x²＋12x を −3 でくくると (x²−4x) になる'},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=-3\\{(x-2)^2-4\\}-8'),
+         note:'x の係数 −4 の半分 ＝ −2、(−2)²＝4'},
+        {label:'−3 を分配してまとめる',
+         math:kd('y=-3(x-2)^2+12-8=-3(x-2)^2+4'),
+         note:'<span class="expl-key">−3×(−4)＝＋12</span>'}
+      ],'頂点は (2, 4)')
+    }
+  ],
+  m3:[
+    {
+      q:k('y=2x^2-3x+1')+'　の頂点として正しいものはどれか？',
+      choices:[
+        '頂点 '+k('\\left(\\dfrac{3}{4},\\ -\\dfrac{1}{8}\\right)'),
+        '頂点 '+k('\\left(\\dfrac{3}{2},\\ -\\dfrac{1}{4}\\right)'),
+        '頂点 '+k('\\left(\\dfrac{3}{4},\\ \\dfrac{1}{8}\\right)'),
+        '頂点 '+k('\\left(-\\dfrac{3}{4},\\ -\\dfrac{1}{8}\\right)')
+      ],
+      ans:0,
+      expl: buildExplBox([
+        {label:'2 でくくり出す',
+         math:kd('y=2(x^2-\\tfrac{3}{2}x)+1'),
+         note:'x の係数 −3 を 2 でくくると係数は −3/2 になる'},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=2\\left\\{\\left(x-\\frac{3}{4}\\right)^2-\\frac{9}{16}\\right\\}+1'),
+         note:'<span class="expl-key">x の係数 −3/2 の半分 ＝ −3/4　→　(−3/4)²＝9/16</span>'},
+        {label:'2 を分配してまとめる',
+         math:kd('y=2\\left(x-\\frac{3}{4}\\right)^2-\\frac{9}{8}+1=2\\left(x-\\frac{3}{4}\\right)^2-\\frac{1}{8}'),
+         note:'<span class="expl-key">2×(−9/16)＝−9/8</span>　−9/8＋1＝−9/8＋8/8＝−1/8'}
+      ],'頂点は '+k('\\left(\\dfrac{3}{4},\\ -\\dfrac{1}{8}\\right)'))
+    },
+    {
+      q:k('y=4x^2-6x+2')+'　の頂点として正しいものはどれか？',
+      choices:[
+        '頂点 '+k('\\left(\\dfrac{3}{4},\\ -\\dfrac{1}{4}\\right)'),
+        '頂点 '+k('\\left(\\dfrac{3}{4},\\ \\dfrac{1}{4}\\right)'),
+        '頂点 '+k('\\left(-\\dfrac{3}{4},\\ -\\dfrac{1}{4}\\right)'),
+        '頂点 '+k('\\left(\\dfrac{3}{2},\\ -\\dfrac{1}{4}\\right)')
+      ],
+      ans:0,
+      expl: buildExplBox([
+        {label:'4 でくくり出す',
+         math:kd('y=4(x^2-\\tfrac{3}{2}x)+2')},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=4\\left\\{\\left(x-\\frac{3}{4}\\right)^2-\\frac{9}{16}\\right\\}+2'),
+         note:'x の係数 −3/2 の半分 ＝ −3/4　→　(3/4)²＝9/16'},
+        {label:'4 を分配してまとめる',
+         math:kd('y=4\\left(x-\\frac{3}{4}\\right)^2-\\frac{9}{4}+2=4\\left(x-\\frac{3}{4}\\right)^2-\\frac{1}{4}'),
+         note:'<span class="expl-key">4×(−9/16)＝−9/4</span>　−9/4＋2＝−9/4＋8/4＝−1/4'}
+      ],'頂点は '+k('\\left(\\dfrac{3}{4},\\ -\\dfrac{1}{4}\\right)'))
+    },
+    {
+      q:k('y=-2x^2+5x-1')+'　の頂点として正しいものはどれか？',
+      choices:[
+        '頂点 '+k('\\left(\\dfrac{5}{4},\\ \\dfrac{17}{8}\\right)'),
+        '頂点 '+k('\\left(\\dfrac{5}{4},\\ -\\dfrac{17}{8}\\right)'),
+        '頂点 '+k('\\left(-\\dfrac{5}{4},\\ \\dfrac{17}{8}\\right)'),
+        '頂点 '+k('\\left(\\dfrac{5}{2},\\ \\dfrac{17}{8}\\right)')
+      ],
+      ans:0,
+      expl: buildExplBox([
+        {label:'−2 でくくり出す',
+         math:kd('y=-2(x^2-\\tfrac{5}{2}x)-1'),
+         note:'−2x²＋5x を −2 でくくると係数が −5/2 に変わる'},
+        {label:'カッコの中を平方完成する',
+         math:kd('y=-2\\left\\{\\left(x-\\frac{5}{4}\\right)^2-\\frac{25}{16}\\right\\}-1'),
+         note:'<span class="expl-key">−5/2 の半分 ＝ −5/4　→　(5/4)²＝25/16</span>'},
+        {label:'−2 を分配してまとめる',
+         math:kd('y=-2\\left(x-\\frac{5}{4}\\right)^2+\\frac{25}{8}-1=-2\\left(x-\\frac{5}{4}\\right)^2+\\frac{17}{8}'),
+         note:'<span class="expl-key">−2×(−25/16)＝＋25/8</span>　25/8−8/8＝17/8'}
+      ],'頂点は '+k('\\left(\\dfrac{5}{4},\\ \\dfrac{17}{8}\\right)'))
+    }
+  ],
+  fin:[
+    {
+      q:'【総合①】 '+k('y=3x^2+12x+5')+'　を平方完成した式はどれか？',
+      choices:[k('3(x+2)^2-7'),k('3(x-2)^2-7'),k('3(x+2)^2+7'),k('3(x+2)^2-1')],
+      ans:0,
+      expl: buildExplBox([
+        {label:'3 でくくり出す',math:kd('y=3(x^2+4x)+5')},
+        {label:'平方完成・分配・まとめ',
+         math:kd('3\\{(x+2)^2-4\\}+5=3(x+2)^2-12+5=3(x+2)^2-7'),
+         note:'<span class="expl-key">3×(−4)＝−12</span>'}
+      ],'答え：'+k('3(x+2)^2-7'))
+    },
+    {
+      q:'【総合②】 '+k('y=-x^2+6x-5')+'　の頂点として正しいものはどれか？',
+      choices:['頂点 '+k('(3,\\ 4)'),'頂点 '+k('(-3,\\ 4)'),'頂点 '+k('(3,\\ -4)'),'頂点 '+k('(6,\\ 4)')],
+      ans:0,
+      expl: buildExplBox([
+        {label:'−1 でくくり出す',math:kd('y=-(x^2-6x)-5'),note:'符号が変わる！'},
+        {label:'平方完成・分配・まとめ',
+         math:kd('y=-\\{(x-3)^2-9\\}-5=-(x-3)^2+4'),
+         note:'<span class="expl-key">−1×(−9)＝＋9</span>'}
+      ],'頂点は (3, 4)')
+    },
+    {
+      q:'【総合③】 '+k('y=2x^2-3x+1')+'　の頂点として正しいものはどれか？',
+      choices:[
+        '頂点 '+k('\\left(\\dfrac{3}{4},\\ -\\dfrac{1}{8}\\right)'),
+        '頂点 '+k('\\left(\\dfrac{3}{4},\\ \\dfrac{1}{8}\\right)'),
+        '頂点 '+k('\\left(\\dfrac{3}{2},\\ -\\dfrac{1}{8}\\right)'),
+        '頂点 '+k('\\left(-\\dfrac{3}{4},\\ -\\dfrac{1}{8}\\right)')
+      ],
+      ans:0,
+      expl: buildExplBox([
+        {label:'2 でくくり出す',math:kd('y=2(x^2-\\tfrac{3}{2}x)+1')},
+        {label:'平方完成・分配・まとめ',
+         math:kd('2\\left(x-\\frac{3}{4}\\right)^2-\\frac{1}{8}'),
+         note:'<span class="expl-key">x の係数 −3/2 の半分 ＝ −3/4</span>'}
+      ],'頂点は '+k('\\left(\\dfrac{3}{4},\\ -\\dfrac{1}{8}\\right)'))
+    }
+  ]
+};
+
+/* ══════════════════════════════
+   ミニテストビルダー
+══════════════════════════════ */
+var miniState={m1:{ok:0,solved:[false,false,false]},m2:{ok:0,solved:[false,false,false]},m3:{ok:0,solved:[false,false,false]},fin:{ok:0,solved:[false,false,false]}};
+
+function buildGroup(containerId, groupId, qList, isMini){
+  var container=document.getElementById(containerId);
+  container.innerHTML='';
+  qList.forEach(function(q,qi){
+    var card=document.createElement('div');
+    card.className=isMini?'mq-card':'quiz-card';
+    card.id=groupId+'_card'+qi;
+
+    // 問題文
+    var qDiv=document.createElement('div');
+    qDiv.className=isMini?'mq-q':'quiz-q';
+    var num=document.createElement('span');
+    num.className=isMini?'mq-num':'quiz-num';
+    num.textContent=qi+1;
+    var qTxt=document.createElement('span');
+    qTxt.innerHTML=q.q;
+    qDiv.appendChild(num); qDiv.appendChild(qTxt);
+
+    // 選択肢
+    var choicesDiv=document.createElement('div');
+    choicesDiv.className=isMini?'mq-choices':'choices';
+    q.choices.forEach(function(c,ci){
+      var btn=document.createElement('button');
+      btn.className=isMini?'mq-btn':'choice-btn';
+      btn.innerHTML=c;
+      btn.addEventListener('click',function(){
+        if(miniState[groupId].solved[qi]) return;
+        choicesDiv.querySelectorAll(isMini?'.mq-btn':'.choice-btn').forEach(function(b){b.disabled=true;});
+        var res=document.getElementById(groupId+'_res'+qi);
+        if(ci===q.ans){
+          btn.classList.add('correct');
+          res.className=(isMini?'mq-result':'quiz-result')+' ok show';
+          res.innerHTML='🎉 <strong>正解！</strong><br>'+q.expl;
+          card.classList.add('solved');
+          if(!miniState[groupId].solved[qi]){
+            miniState[groupId].solved[qi]=true;
+            miniState[groupId].ok++;
+            updateBadge(groupId);
+            launchConfetti();
+            if(groupId==='fin') updateFinalProg();
+          }
+        } else {
+          btn.classList.add('wrong');
+          choicesDiv.querySelectorAll(isMini?'.mq-btn':'.choice-btn')[q.ans].classList.add('reveal');
+          res.className=(isMini?'mq-result':'quiz-result')+' ng show';
+          res.innerHTML='❌ <strong>残念！</strong>　正解は <strong>'+q.choices[q.ans]+'</strong> です。<br>'+q.expl+
+            '<br><button class="retry-btn" onclick="resetQ(\''+groupId+'\','+qi+',\''+containerId+'\')">🔄 もう一度</button>';
+        }
+      });
+      choicesDiv.appendChild(btn);
+    });
+
+    // 結果欄
+    var res=document.createElement('div');
+    res.className=isMini?'mq-result':'quiz-result';
+    res.id=groupId+'_res'+qi;
+
+    card.appendChild(qDiv); card.appendChild(choicesDiv); card.appendChild(res);
+    container.appendChild(card);
+  });
+}
+
+function updateBadge(groupId){
+  var ok=miniState[groupId].ok;
+  var total=miniData[groupId].length;
+  var badgeId={m1:'badge1',m2:'badge2',m3:'badge3'}[groupId];
+  if(badgeId) document.getElementById(badgeId).textContent=ok+' / '+total+' 問';
+}
+
+function updateFinalProg(){
+  var ok=miniState.fin.ok;
+  document.getElementById('prog-text').textContent=ok+' / 3 問正解';
+  document.getElementById('prog-fill').style.width=(ok/3*100)+'%';
+  if(ok===3){setTimeout(launchConfetti,400);setTimeout(launchConfetti,900);}
+}
+
+function resetQ(groupId, qi, containerId){
+  if(miniState[groupId].solved[qi]){
+    miniState[groupId].ok--;
+    miniState[groupId].solved[qi]=false;
+    updateBadge(groupId);
+    if(groupId==='fin') updateFinalProg();
+  }
+  var isMini=(groupId!=='fin');
+  var card=document.getElementById(groupId+'_card'+qi);
+  card.classList.remove('solved');
+  var choicesDiv=card.querySelector(isMini?'.mq-choices':'.choices');
+  choicesDiv.querySelectorAll(isMini?'.mq-btn':'.choice-btn').forEach(function(b){
+    b.disabled=false; b.classList.remove('correct','wrong','reveal');
+  });
+  var res=document.getElementById(groupId+'_res'+qi);
+  res.className=isMini?'mq-result':'quiz-result';
+}
+
+buildGroup('mini1_qs','m1',miniData.m1,true);
+buildGroup('mini2_qs','m2',miniData.m2,true);
+buildGroup('mini3_qs','m3',miniData.m3,true);
+buildGroup('final_qs','fin',miniData.fin,false);
+</script>
+</body>
+</html>

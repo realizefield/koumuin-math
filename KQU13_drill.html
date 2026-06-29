@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KQU13 演習　動く区間の最大・最小</title>
+<style>
+:root{
+  --primary:#4f46e5;--primary-d:#3730a3;--primary-l:#eef2ff;
+  --hint:#f59e0b;--hint-bg:#fffbeb;--warn:#dc2626;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --green:#059669;--green-l:#f0fdf4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'BIZ UDPGothic',sans-serif;line-height:1.8;font-size:15px;overflow-x:hidden}
+header{position:sticky;top:0;background:var(--primary);color:#fff;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10}
+header h1{margin:0;font-size:1.05em;font-weight:700}
+header .sub{font-size:.78em;opacity:.88;margin-top:2px}
+.steps{display:flex;background:#fff;border-bottom:1px solid var(--border)}
+.step{flex:1;text-align:center;padding:8px 4px;font-size:.78em;font-weight:700;color:var(--muted);border-bottom:3px solid var(--border)}
+.step.active{color:var(--primary);border-color:var(--primary)}
+.wrap{max-width:680px;margin:0 auto;padding:16px 16px 40px}
+.set-selector{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.set-btn{padding:8px 18px;border:2px solid var(--border);border-radius:8px;background:#fff;font-weight:700;cursor:pointer;font-size:.9em;color:var(--muted);transition:.15s}
+.set-btn.active{border-color:var(--primary);color:var(--primary);background:var(--primary-l)}
+.set-desc{font-size:.82em;color:var(--muted);margin-bottom:14px;padding:6px 10px;background:#f8fafc;border-radius:6px;border-left:3px solid var(--primary)}
+.drill-card{background:var(--card);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid var(--border)}
+.q-num{font-size:.82em;font-weight:700;color:var(--muted);margin-bottom:6px}
+.q-text{font-size:1.02em;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.7}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice{padding:11px 10px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:.88em;text-align:center;transition:.15s;font-weight:500;line-height:1.6}
+.choice:hover{border-color:var(--primary);background:var(--primary-l)}
+.choice.selected{border-color:var(--primary);background:var(--primary-l);color:var(--primary-d)}
+.choice.correct{border-color:var(--green);background:var(--green-l);color:#065f46;font-weight:700}
+.choice.wrong{border-color:var(--warn);background:#fef2f2;color:var(--warn);font-weight:700}
+.feedback{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.9em;line-height:2.1}
+.feedback.show{display:block}
+.feedback.ok-fb{background:var(--green-l);border-left:4px solid var(--green);color:#065f46}
+.feedback.ng-fb{background:#fef2f2;border-left:4px solid var(--warn);color:#991b1b}
+.fb-steps{margin-top:8px;background:#fff;border-radius:8px;padding:10px 12px;border:1px solid var(--border);font-size:.93em;line-height:2.3;color:var(--text)}
+.fb-key{background:#fef9c3;border-radius:3px;padding:0 3px;color:#92400e;font-weight:700}
+.submit-row{text-align:center;margin:20px 0 8px}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:13px 40px;border-radius:10px;font-size:1em;font-weight:700;cursor:pointer}
+.btn-submit:disabled{background:#94a3b8;cursor:default}
+.result-box{display:none;margin:16px 0;padding:20px;border-radius:12px;text-align:center;border:2px solid var(--border)}
+.result-box.show{display:block}
+.result-box.passed{border-color:var(--green);background:var(--green-l)}
+.result-box.failed{border-color:var(--hint);background:var(--hint-bg)}
+.result-msg{font-size:1.2em;font-weight:700;margin-bottom:6px}
+.result-score{font-size:2.2em;font-weight:700;color:var(--primary);margin:6px 0}
+.result-detail{font-size:.9em;color:var(--muted)}
+.nav{display:flex;gap:10px;margin-top:20px}
+.btn{display:block;padding:12px 16px;border-radius:10px;text-decoration:none;text-align:center;font-weight:700;font-size:.95em;flex:1}
+.btn-back{background:#f1f5f9;color:var(--muted)}
+.btn-next{background:var(--primary);color:#fff}
+@keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;animation:confetti-fall 2.5s ease-in forwards;pointer-events:none;z-index:9999}
+</style>
+</head>
+<body>
+<header>
+  <h1>KQU13　演習　動く区間の最大・最小</h1>
+  <div class="sub">上級 ── t ≦ x ≦ t＋2 の区間が動くときの場合分け</div>
+</header>
+<div class="steps">
+  <div class="step"><a href="./KQU13_intro.html" style="color:inherit;text-decoration:none">① 解説</a></div>
+  <div class="step active">② 演習</div>
+  <div class="step"><a href="./KQU13_check.html" style="color:inherit;text-decoration:none">③ 確認</a></div>
+</div>
+<div class="wrap">
+<div class="set-selector">
+  <button class="set-btn active" onclick="loadSet(0)">セットA</button>
+  <button class="set-btn" onclick="loadSet(1)">セットB</button>
+  <button class="set-btn" onclick="loadSet(2)">セットC</button>
+</div>
+<div class="set-desc" id="set-desc"></div>
+<div id="quiz-area"></div>
+<div class="submit-row">
+  <button class="btn-submit" id="btn-submit" onclick="grade()">採点する</button>
+</div>
+<div class="result-box" id="result">
+  <div class="result-msg" id="result-msg"></div>
+  <div class="result-score" id="result-score"></div>
+  <div class="result-detail" id="result-detail"></div>
+</div>
+<div class="nav">
+  <a href="./KQU13_intro.html" class="btn btn-back">← 解説へ戻る</a>
+  <a href="./KQU13_check.html" class="btn btn-next">確認テストへ →</a>
+</div>
+</div>
+<script>
+const SET_DESC=[
+  'セットA ── 軸と区間の位置関係・境界の確認（基本）',
+  'セットB ── 最小値 m(t) を t で表す（標準）',
+  'セットC ── 最大値を求める問題（応用）',
+];
+const SETS=[
+  // ══ セットA：位置関係・境界の確認 ══
+  [
+    {
+      q:'y＝(x－2)²－1　（t ≦ x ≦ t＋2）\n軸 x＝2 が区間の右外（x＝t＋2 より右）になる t の条件はどれか？',
+      choices:['t＋2 ＜ 2（つまり t ＜ 0）','t ＜ 2','t ＞ 2','t ＞ 0'],
+      ans:0,
+      exp:'正解 <b>t＋2 ＜ 2（t ＜ 0）</b>',
+      steps:['軸 x＝2 が区間の右外 → 区間の右端 t＋2 より右に軸がある','条件：t＋2 ＜ 2 → <span class="fb-key">t ＜ 0</span>','このとき最小値は x＝t＋2（区間の右端）でとる']
+    },
+    {
+      q:'y＝(x－2)²－1　（t ≦ x ≦ t＋2）\n軸 x＝2 が区間内にある t の条件はどれか？',
+      choices:['t ≦ 2 ≦ t＋2（つまり 0 ≦ t ≦ 2）','t ＜ 0','t ＞ 2','t ＝ 1'],
+      ans:0,
+      exp:'正解 <b>0 ≦ t ≦ 2</b>',
+      steps:['軸 x＝2 が区間 [t, t＋2] 内にある条件','左端 ≦ 軸 ≦ 右端：t ≦ 2 ≦ t＋2','→ t ≦ 2 かつ t＋2 ≧ 2 → <span class="fb-key">0 ≦ t ≦ 2</span>','このとき最小値は頂点 (2, −1) の y 座標 −1']
+    },
+    {
+      q:'y＝x²－4x＋5 ＝ (x－2)²＋1　（t ≦ x ≦ t＋2）\n軸 x＝2 が区間の左外（x＝t より左）になる t の条件はどれか？',
+      choices:['t ＞ 2','t ＜ 0','0 ≦ t ≦ 2','t ＜ 2'],
+      ans:0,
+      exp:'正解 <b>t ＞ 2</b>',
+      steps:['軸 x＝2 が区間の左外 → 区間の左端 t より左に軸がある','条件：t ＞ 2（つまり軸が左端より左）','<span class="fb-key">t ＞ 2 のとき最小値は x＝t（区間の左端）でとる</span>']
+    },
+    {
+      q:'y＝(x－3)²＋2　（t ≦ x ≦ t＋2）の場合分けの境界となる t の値はどれか？',
+      choices:['t＝1 と t＝3','t＝0 と t＝2','t＝2 と t＝4','t＝－1 と t＝3'],
+      ans:0,
+      exp:'正解 <b>t＝1 と t＝3</b>',
+      steps:['軸 x＝3、区間の幅は 2','軸が右端と一致：3 ＝ t＋2 → <span class="fb-key">t＝1</span>','軸が左端と一致：3 ＝ t → <span class="fb-key">t＝3</span>','→ t＜1、1≦t≦3、t＞3 の3つに場合分け']
+    },
+  ],
+  // ══ セットB：最小値 m(t) ══
+  [
+    {
+      q:'y＝x²－2x＋3 ＝ (x－1)²＋2　（t ≦ x ≦ t＋2）\nt ＞ 1 のとき最小値 m(t) はどれか？',
+      choices:['m(t)＝t²－2t＋3','m(t)＝2','m(t)＝t²＋2t＋3','m(t)＝(t＋2)²－2(t＋2)＋3'],
+      ans:0,
+      exp:'正解 <b>m(t)＝t²－2t＋3</b>',
+      steps:['t ＞ 1 → 軸 x＝1 が区間の左外','最小値は x＝t（左端）でとる','m(t) ＝ t²－2t＋3']
+    },
+    {
+      q:'y＝x²－2x＋3 ＝ (x－1)²＋2　（t ≦ x ≦ t＋2）\n－1 ≦ t ≦ 1 のとき最小値 m(t) はどれか？',
+      choices:['m(t)＝2','m(t)＝t²－2t＋3','m(t)＝t²＋2t＋3','m(t)＝1'],
+      ans:0,
+      exp:'正解 <b>m(t)＝2</b>',
+      steps:['−1 ≦ t ≦ 1 → 軸 x＝1 が区間内','最小値は頂点 (1, 2) の y 座標','<span class="fb-key">m(t) ＝ 2（t に関係なく一定）</span>']
+    },
+    {
+      q:'y＝x²－2x＋3 ＝ (x－1)²＋2　（t ≦ x ≦ t＋2）\nt ＜ －1 のとき最小値 m(t) はどれか？',
+      choices:['m(t)＝(t＋2)²－2(t＋2)＋3＝t²＋2t＋3','m(t)＝2','m(t)＝t²－2t＋3','m(t)＝t＋3'],
+      ans:0,
+      exp:'正解 <b>m(t)＝t²＋2t＋3</b>',
+      steps:['t ＜ −1 → 軸 x＝1 が区間の右外','最小値は x＝t＋2（右端）でとる','m(t) ＝ (t＋2)²－2(t＋2)＋3','＝ t²＋4t＋4－2t－4＋3 ＝ <span class="fb-key">t²＋2t＋3</span>']
+    },
+    {
+      q:'y＝x²－4x＋5 ＝ (x－2)²＋1　（t ≦ x ≦ t＋2）\n0 ≦ t ≦ 2 のとき最小値 m(t) はどれか？',
+      choices:['m(t)＝1','m(t)＝t²－4t＋5','m(t)＝(t＋2)²－4(t＋2)＋5','m(t)＝4'],
+      ans:0,
+      exp:'正解 <b>m(t)＝1</b>',
+      steps:['0 ≦ t ≦ 2 → 軸 x＝2 が区間内','最小値は頂点の y 座標','<span class="fb-key">m(t) ＝ 1（一定）</span>']
+    },
+  ],
+  // ══ セットC：最大値 ══
+  [
+    {
+      q:'y＝(x－2)²－1　（0 ≦ x ≦ 4）\nこの区間での最大値はどれか？',
+      choices:['x＝0 または x＝4 で最大値 3','x＝2 で最大値 3','x＝0 で最大値 3','x＝4 で最大値 3'],
+      ans:0,
+      exp:'正解 <b>x＝0 または x＝4 で最大値 3</b>',
+      steps:['軸 x＝2 は区間 [0, 4] の中点','軸から等距離の x＝0 と x＝4 が最も離れている','y(0) ＝ (0－2)²－1 ＝ 4－1 ＝ 3','y(4) ＝ (4－2)²－1 ＝ 4－1 ＝ 3','<span class="fb-key">最大値は両端で等しく 3</span>']
+    },
+    {
+      q:'y＝(x－1)²＋2　（t ≦ x ≦ t＋2）\nt ＞ 1 のとき最大値はどれか？',
+      choices:['x＝t＋2 で最大、M(t)＝(t＋2)²－2(t＋2)＋3','x＝t で最大','x＝1 で最大','x＝t＋1 で最大'],
+      ans:0,
+      exp:'正解 <b>x＝t＋2（右端）で最大</b>',
+      steps:['上に開く放物線では軸から遠い点が最大','t ＞ 1 → 軸 x＝1 が区間の左外','区間内で軸から最も遠いのは右端 x＝t＋2','<span class="fb-key">M(t) ＝ (t＋2)²－2(t＋2)＋3 ＝ t²＋2t＋3</span>']
+    },
+    {
+      q:'y＝(x－1)²＋2　（t ≦ x ≦ t＋2）\nt ＜ 0 のとき最大値はどれか？',
+      choices:['x＝t で最大、M(t)＝t²－2t＋3','x＝t＋2 で最大','x＝1 で最大','x＝0 で最大'],
+      ans:0,
+      exp:'正解 <b>x＝t（左端）で最大</b>',
+      steps:['t ＜ 0 → 軸 x＝1 が区間の右外','区間内で軸から最も遠いのは左端 x＝t','M(t) ＝ t²－2t＋3','<span class="fb-key">軸の右外 → 左端が最大！</span>']
+    },
+    {
+      q:'y＝(x－1)²＋2　（t ≦ x ≦ t＋2）\n0 ≦ t ≦ 1 のとき最大値はどれか？',
+      choices:['両端のうち遠い方で最大（M(t)＝max{t²－2t＋3, t²＋2t＋3}）','x＝1 で最大','x＝t で最大','x＝t＋2 で最大'],
+      ans:0,
+      exp:'正解 <b>両端のうち軸から遠い方で最大</b>',
+      steps:['0 ≦ t ≦ 1 → 軸 x＝1 が区間内','最大値は両端のうち軸から遠い方','t＝0 のとき軸 x＝1 は区間中点 → 両端等しく 3','t＝1 のとき右端 x＝3、左端 x＝1（軸）→ 右端が遠い','<span class="fb-key">軸の位置によって最大値をとる端が変わる</span>']
+    },
+  ],
+];
+
+let currentSet=0;
+function loadSet(idx){
+  currentSet=idx;
+  document.querySelectorAll('.set-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.getElementById('set-desc').textContent=SET_DESC[idx];
+  document.getElementById('btn-submit').disabled=false;
+  document.getElementById('btn-submit').textContent='採点する';
+  document.getElementById('result').className='result-box';
+  const area=document.getElementById('quiz-area');
+  area.innerHTML='';
+  SETS[idx].forEach((q,i)=>{
+    const card=document.createElement('div');
+    card.className='drill-card';
+    card.dataset.q=i;
+    const qText=q.q.replace(/\n/g,'<br>');
+    card.innerHTML=`
+      <div class="q-num">問 ${i+1}</div>
+      <div class="q-text">${qText}</div>
+      <div class="choices">${q.choices.map((c,j)=>`<button class="choice" data-i="${j}" onclick="pick(this,${i})">${c}</button>`).join('')}</div>
+      <div class="feedback" id="fb-${i}"></div>
+    `;
+    area.appendChild(card);
+  });
+}
+function pick(btn,qIdx){
+  const card=btn.closest('.drill-card');
+  if(card.dataset.chosen) return;
+  card.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  card.dataset.chosen=btn.dataset.i;
+}
+function grade(){
+  const qs=SETS[currentSet];
+  let correct=0;
+  qs.forEach((q,i)=>{
+    const card=document.querySelector(`.drill-card[data-q="${i}"]`);
+    const chosen=card.dataset.chosen;
+    if(!chosen){alert(`問${i+1}がまだ選択されていません`);return;}
+    const isOK=parseInt(chosen)===q.ans;
+    if(isOK) correct++;
+    card.querySelectorAll('.choice').forEach(b=>{
+      b.disabled=true;
+      if(parseInt(b.dataset.i)===q.ans) b.classList.add('correct');
+      if(parseInt(b.dataset.i)===parseInt(chosen)&&!isOK) b.classList.add('wrong');
+    });
+    const fb=document.getElementById(`fb-${i}`);
+    fb.innerHTML=q.exp+'<div class="fb-steps">'+q.steps.map(s=>`<div>${s}</div>`).join('')+'</div>';
+    fb.className='feedback show '+(isOK?'ok-fb':'ng-fb');
+  });
+  const passed=correct===qs.length;
+  const result=document.getElementById('result');
+  result.className='result-box show '+(passed?'passed':'failed');
+  document.getElementById('result-msg').textContent=passed?'🎉 全問正解！':'もう一度確認しましょう';
+  document.getElementById('result-score').textContent=`${correct} / ${qs.length}`;
+  document.getElementById('result-detail').textContent=passed?'確認テストへ進もう！':'解説を読んで別のセットにも挑戦してみよう。';
+  if(passed) confetti();
+  document.getElementById('btn-submit').disabled=true;
+  document.getElementById('btn-submit').textContent='採点済み';
+}
+function confetti(){
+  const colors=['#4f46e5','#f59e0b','#059669','#0284c7','#dc2626'];
+  for(let i=0;i<60;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${colors[i%5]};animation-delay:${Math.random()*1.2}s;animation-duration:${2+Math.random()}s;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3500);
+  }
+}
+loadSet(0);
+</script>
+</body>
+</html>

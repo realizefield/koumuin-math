@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>公務員数学 二次関数 単元一覧 | GAMBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --bg:#f0f4f8;
+  --card:#ffffff;
+  --text:#1e293b;
+  --muted:#64748b;
+  --border:#e2e8f0;
+
+  /* 初級カラー（青緑系） */
+  --sho:#0f766e;  --sho-l:#f0fdfa;  --sho-b:#99f6e4;
+
+  /* 上級カラー（紺・紫系） */
+  --jo:#4f46e5;   --jo-l:#eef2ff;   --jo-b:#c7d2fe;
+
+  /* 過去問バッジ */
+  --purple:#9333ea; --purple-l:#faf5ff;
+
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'BIZ UDPGothic',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+  line-height:1.7;
+  padding-bottom:60px;
+}
+
+/* ── ヘッダー ── */
+.site-header{
+  background:linear-gradient(135deg,#0f766e 0%,#4f46e5 100%);
+  color:#fff;
+  padding:22px 20px 18px;
+  text-align:center;
+}
+.site-header .logo{font-size:13px;opacity:.8;letter-spacing:.1em;margin-bottom:4px}
+.site-header h1{font-size:22px;font-weight:700;letter-spacing:.05em}
+.site-header p{font-size:13px;opacity:.85;margin-top:4px}
+
+/* ── 戻るリンク ── */
+.back-link{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 16px;
+  font-size:13px;color:var(--muted);
+  text-decoration:none;
+  border-bottom:1px solid var(--border);
+  background:#fff;
+}
+.back-link:hover{color:#0f766e}
+
+/* ── タブ切り替え ── */
+.tab-wrap{
+  display:flex;
+  margin:16px 16px 0;
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+.tab-btn{
+  flex:1;
+  padding:12px 8px;
+  text-align:center;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  font-family:'BIZ UDPGothic',sans-serif;
+  transition:background .2s,color .2s;
+  border-right:1px solid var(--border);
+}
+.tab-btn:last-child{border-right:none}
+.tab-btn.active-sho{background:var(--sho);color:#fff;}
+.tab-btn.active-jo {background:var(--jo); color:#fff;}
+.tab-btn:not([class*="active"]):hover{background:var(--bg)}
+
+/* レベルバッジ */
+.level-badge{
+  display:inline-block;
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:20px;
+  font-weight:700;
+  margin-left:6px;
+  vertical-align:middle;
+}
+.badge-sho{background:var(--sho-l);color:var(--sho);border:1px solid var(--sho-b)}
+.badge-jo {background:var(--jo-l); color:var(--jo); border:1px solid var(--jo-b)}
+
+/* ── 使い方バナー ── */
+.howto{
+  margin:12px 16px 0;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:12px 14px;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.7;
+}
+.howto strong{color:var(--text)}
+.howto-abc{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.howto-abc-title{font-weight:700;color:var(--text);margin-bottom:6px;font-size:13px}
+.howto-abc-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);margin-bottom:4px}
+.abc-demo{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-size:11px;font-weight:700;flex-shrink:0;color:#fff}
+.abc-demo.a{background:#059669}
+.abc-demo.b{background:#d97706}
+.abc-demo.c{background:#dc2626}
+
+/* ── 章ブロック ── */
+.chapter{margin:20px 16px 0}
+.chapter-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.chapter-badge{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.chapter-title{font-size:16px;font-weight:700}
+.chapter-sub{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* ── 単元カード ── */
+.unit-list{display:flex;flex-direction:column;gap:8px}
+.unit-card{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:12px 14px;
+  text-decoration:none;
+  color:var(--text);
+  transition:transform .15s,box-shadow .15s,border-color .15s;
+}
+.unit-card:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.unit-card.sho{border-left:4px solid var(--sho)}
+.unit-card.jo {border-left:4px solid var(--jo)}
+.unit-card:hover.sho{border-color:var(--sho);background:var(--sho-l)}
+.unit-card:hover.jo {border-color:var(--jo); background:var(--jo-l)}
+
+/* コードバッジ */
+.unit-code{
+  flex-shrink:0;font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;
+  letter-spacing:.05em;min-width:52px;text-align:center;
+}
+.code-sho{background:var(--sho-l);color:var(--sho);border:1px solid var(--sho-b)}
+.code-jo {background:var(--jo-l); color:var(--jo); border:1px solid var(--jo-b)}
+
+/* テキスト */
+.unit-info{flex:1;min-width:0}
+.unit-name{font-size:14px;font-weight:700;line-height:1.4}
+.unit-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ページタグ */
+.unit-pages{flex-shrink:0;font-size:11px;color:var(--muted);display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
+.page-tag{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:10px}
+
+/* 矢印 */
+.unit-arrow{color:#cbd5e1;font-size:18px;flex-shrink:0;margin-left:4px}
+.unit-card:hover .unit-arrow{color:var(--muted)}
+
+/* A/B/C チェックボタン */
+.check-btns{display:flex;flex-direction:column;gap:4px;flex-shrink:0;margin-left:6px}
+.chk{
+  width:28px;height:28px;border-radius:8px;border:2px solid var(--border);
+  background:#fff;font-size:11px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:.15s;font-family:inherit;color:var(--muted);
+  -webkit-tap-highlight-color:transparent;
+}
+.chk:hover{border-color:#94a3b8}
+.chk.active-a{background:#059669;border-color:#059669;color:#fff}
+.chk.active-b{background:#d97706;border-color:#d97706;color:#fff}
+.chk.active-c{background:#dc2626;border-color:#dc2626;color:#fff}
+.unit-card[data-status="A"]{background:linear-gradient(to right,#f0fdf4 0%,#fff 40px)}
+.unit-card[data-status="B"]{background:linear-gradient(to right,#fffbeb 0%,#fff 40px)}
+.unit-card[data-status="C"]{background:linear-gradient(to right,#fef2f2 0%,#fff 40px)}
+
+/* タブコンテンツ表示切り替え */
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── フッター ── */
+.footer{text-align:center;font-size:12px;color:var(--muted);padding:24px 16px}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">🎯 GAMBA 公務員対策</div>
+  <h1>公務員数学 二次関数</h1>
+  <p>初級（高卒程度）・上級（大卒程度）に分けて学ぼう！</p>
+</header>
+
+<a class="back-link" href="../gamba_kounin.html">← メインメニューへ</a>
+
+<!-- タブボタン -->
+<div class="tab-wrap">
+  <button class="tab-btn active-sho" id="btn-sho" onclick="switchTab('sho')">
+    🟢 初級<span class="level-badge badge-sho">高卒程度</span>
+  </button>
+  <button class="tab-btn" id="btn-jo" onclick="switchTab('jo')">
+    🔵 上級<span class="level-badge badge-jo">大卒程度</span>
+  </button>
+</div>
+
+<!-- 使い方 -->
+<div class="howto">
+  <strong>📌 使い方</strong>　レベルを選んで各単元をタップしましょう。<br>
+  <strong>導入 → 例題 → 練習 → 確認テスト</strong> の順に進むと理解が深まります。
+  <div class="howto-abc">
+    <div class="howto-abc-title">📝 学習チェックボタン</div>
+    <div class="howto-abc-row"><span class="abc-demo a">A</span><span>わかった ── 自信を持って解けた！</span></div>
+    <div class="howto-abc-row"><span class="abc-demo b">B</span><span>要復習 ── もう一度やりたい</span></div>
+    <div class="howto-abc-row"><span class="abc-demo c">C</span><span>何度も復習 ── くり返し取り組もう</span></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════ -->
+<!--  初級タブ                          -->
+<!-- ══════════════════════════════════ -->
+<div class="tab-content active" id="tab-sho">
+
+  <!-- 初級セクション（KQU01〜KQU12） -->
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-badge" style="background:var(--sho)">初</div>
+      <div>
+        <div class="chapter-title" style="color:var(--sho)">初級（高卒程度）二次関数</div>
+        <div class="chapter-sub">KQU01〜KQU12 ── 基礎から公務員初級の頻出パターンを攻略</div>
+      </div>
+    </div>
+
+    <div class="unit-list">
+
+      <!-- KQU01 -->
+      <a href="KQU01/KQU01_intro.html" class="unit-card sho" data-unit="KQU01">
+        <span class="unit-code code-sho">KQU01</span>
+        <div class="unit-info">
+          <div class="unit-name">頂点座標と平行移動</div>
+          <div class="unit-sub">標準形 y＝a(x－p)²＋q から頂点を読み取る</div>
+        </div>
+        <div class="unit-pages">
+          <span class="page-tag">解説</span>
+          <span class="page-tag">演習</span>
+          <span class="page-tag">確認</span>
+        </div>
+        <span class="unit-arrow">›</span>
+        <div class="check-btns" onclick="event.preventDefault()">
+          <button class="chk btn-a" data-unit="KQU01" onclick="setStatus(this,'KQU01','A')">A</button>
+          <button class="chk btn-b" data-unit="KQU01" onclick="setStatus(this,'KQU01','B')">B</button>
+          <button class="chk btn-c" data-unit="KQU01" onclick="setStatus(this,'KQU01','C')">C</button>
+        </div>
+      </a>
+
+      <!-- KQU02 -->
+      <a href="KQU02/KQU02_intro.html" class="unit-card sho" data-unit="KQU02">
+        <span class="unit-code code-sho">KQU02</span>
+        <div class="unit-info">
+          <div class="unit-name">平方完成（a＝1）</div>
+          <div class="unit-sub">一般形 → 標準形に変形して頂点を求める</div>
+        </div>
+        <div class="unit-pages">
+          <span class="page-tag">解説</span>
+          <span class="page-tag">演習</span>
+          <span class="page-tag">確認</span>
+        </div>
+        <span class="unit-arrow">›</span>
+        <div class="check-btns" onclick="event.preventDefault()">
+          <button class="chk btn-a" data-unit="KQU02" onclick="setStatus(this,'KQU02','A')">A</button>
+          <button class="chk btn-b" data-unit="KQU02" onclick="setStatus(this,'KQU02','B')">B</button>
+          <button class="chk btn-c" data-unit="KQU02" onclick="setStatus(this,'KQU02','C')">C</button>
+        </div>
+      </a>
+
+      <!-- KQU10 -->
+      <a href="KQU10/KQU10_intro_v5.html" class="unit-card sho" data-unit="KQU10">
+        <span class="unit-code code-sho">KQU10</span>
+        <div class="unit-info">
+          <div class="unit-name">a≠1 の平方完成</div>
+          <div class="unit-sub">x² の係数が 1 以外のときのくくり出し</div>
+        </div>
+        <div class="unit-pages">
+          <span class="page-tag">解説</span>
+          <span class="page-tag">演習</span>
+          <span class="page-tag">確認</span>
+        </div>
+        <span class="unit-arrow">›</span>
+        <div class="check-btns" onclick="event.preventDefault()">
+          <button class="chk btn-a" data-unit="KQU10" onclick="setStatus(this,'KQU10','A')">A</button>
+          <button class="chk btn-b" data-unit="KQU10" onclick="setStatus(this,'KQU10','B')">B</button>
+          <button class="chk btn-c" data-unit="KQU10" onclick="setStatus(this,'KQU10','C')">C</button>
+        </div>
+      </a>
+
+      <!-- KQU11 -->
+      <a href="KQU11/KQU11_intro_v2.html" class="unit-card sho" data-unit="KQU11">
+        <span class="unit-code code-sho">KQU11</span>
+        <div class="unit-info">
+          <div class="unit-name">平行移動・対称移動の応用</div>
+          <div class="unit-sub">x・y 両方向の平行移動 ＋ x軸・y軸・原点への対称移動</div>
+        </div>
+        <div class="unit-pages">
+          <span class="page-tag">解説</span>
+          <span class="page-tag">演習</span>
+          <span class="page-tag">確認</span>
+        </div>
+        <span class="unit-arrow">›</span>
+        <div class="check-btns" onclick="event.preventDefault()">
+          <button class="chk btn-a" data-unit="KQU11" onclick="setStatus(this,'KQU11','A')">A</button>
+          <button class="chk btn-b" data-unit="KQU11" onclick="setStatus(this,'KQU11','B')">B</button>
+          <button class="chk btn-c" data-unit="KQU11" onclick="setStatus(this,'KQU11','C')">C</button>
+        </div>
+      </a>
+
+      <!-- KQU12 -->
+      <a href="KQU12/KQU12_intro.html" class="unit-card sho" data-unit="KQU12">
+        <span class="unit-code code-sho">KQU12</span>
+        <div class="unit-info">
+          <div class="unit-name">判別式の応用</div>
+          <div class="unit-sub">D＝b²－4ac ── 常に正・常に負になる条件</div>
+        </div>
+        <div class="unit-pages">
+          <span class="page-tag">解説</span>
+          <span class="page-tag">演習</span>
+          <span class="page-tag">確認</span>
+        </div>
+        <span class="unit-arrow">›</span>
+        <div class="check-btns" onclick="event.preventDefault()">
+          <button class="chk btn-a" data-unit="KQU12" onclick="setStatus(this,'KQU12','A')">A</button>
+          <button class="chk btn-b" data-unit="KQU12" onclick="setStatus(this,'KQU12','B')">B</button>
+          <button class="chk btn-c" data-unit="KQU12" onclick="setStatus(this,'KQU12','C')">C</button>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════ -->
+<!--  上級タブ                          -->
+<!-- ══════════════════════════════════ -->
+<div class="tab-content" id="tab-jo">
+
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-badge" style="background:var(--jo)">上</div>
+      <div>
+        <div class="chapter-title" style="color:var(--jo)">上級（大卒程度）二次関数</div>
+        <div class="chapter-sub">QU13〜QU15 ── 地方上級・国家一般職レベルの応用問題</div>
+      </div>
+    </div>
+
+    <div class="unit-list">
+
+      <!-- QU13 -->
+      <a href="QU13/intro.html" class="unit-card jo" data-unit="QU13">
+        <span class="unit-code code-jo">QU13</span>
+        <div class="unit-info">
+          <div class="unit-name">動く区間の最大・最小</div>
+          <div class="unit-sub">t ≦ x ≦ t+k ── 区間が動くときの場合分け</div>
+        </div>
+        <div class="unit-pages">
+          <span class="page-tag">解説</span>
+          <span class="page-tag">例題</span>
+          <span class="page-tag">練習</span>
+          <span class="page-tag">確認</span>
+        </div>
+        <span class="unit-arrow">›</span>
+        <div class="check-btns" onclick="event.preventDefault()">
+          <button class="chk btn-a" data-unit="QU13" onclick="setStatus(this,'QU13','A')">A</button>
+          <button class="chk btn-b" data-unit="QU13" onclick="setStatus(this,'QU13','B')">B</button>
+          <button class="chk btn-c" data-unit="QU13" onclick="setStatus(this,'QU13','C')">C</button>
+        </div>
+      </a>
+
+      <!-- QU14 -->
+      <a href="QU14/intro.html" class="unit-card jo" data-unit="QU14">
+        <span class="unit-code code-jo">QU14</span>
+        <div class="unit-info">
+          <div class="unit-name">2次不等式（文字係数）</div>
+          <div class="unit-sub">係数に文字を含む不等式 ── a の正負で場合分け</div>
+        </div>
+        <div class="unit-pages">
+          <span class="page-tag">解説</span>
+          <span class="page-tag">例題</span>
+          <span class="page-tag">練習</span>
+          <span class="page-tag">確認</span>
+        </div>
+        <span class="unit-arrow">›</span>
+        <div class="check-btns" onclick="event.preventDefault()">
+          <button class="chk btn-a" data-unit="QU14" onclick="setStatus(this,'QU14','A')">A</button>
+          <button class="chk btn-b" data-unit="QU14" onclick="setStatus(this,'QU14','B')">B</button>
+          <button class="chk btn-c" data-unit="QU14" onclick="setStatus(this,'QU14','C')">C</button>
+        </div>
+      </a>
+
+      <!-- QU15 -->
+      <a href="QU15/intro.html" class="unit-card jo" data-unit="QU15">
+        <span class="unit-code code-jo">QU15</span>
+        <div class="unit-info">
+          <div class="unit-name">条件付き最小値</div>
+          <div class="unit-sub">x + y = k のとき x² + ay² の最小値を求める</div>
+        </div>
+        <div class="unit-pages">
+          <span class="page-tag">解説</span>
+          <span class="page-tag">例題</span>
+          <span class="page-tag">練習</span>
+          <span class="page-tag">確認</span>
+        </div>
+        <span class="unit-arrow">›</span>
+        <div class="check-btns" onclick="event.preventDefault()">
+          <button class="chk btn-a" data-unit="QU15" onclick="setStatus(this,'QU15','A')">A</button>
+          <button class="chk btn-b" data-unit="QU15" onclick="setStatus(this,'QU15','B')">B</button>
+          <button class="chk btn-c" data-unit="QU15" onclick="setStatus(this,'QU15','C')">C</button>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="footer">
+  江原予備校 GAMBA 公務員対策 数学 二次関数<br>
+  わからないときは先生に相談しよう 📞
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script>
+// ── タブ切り替え ──
+function switchTab(level){
+  document.getElementById('tab-sho').classList.remove('active');
+  document.getElementById('tab-jo').classList.remove('active');
+  document.getElementById('btn-sho').className='tab-btn';
+  document.getElementById('btn-jo').className='tab-btn';
+
+  document.getElementById('tab-'+level).classList.add('active');
+  document.getElementById('btn-'+level).classList.add('active-'+level);
+
+  localStorage.setItem('koumin_qu_tab', level);
+}
+
+// ── A/B/C チェック ──
+function setStatus(btn, unitId, status){
+  var key='koumin_qu_'+unitId;
+  var current=localStorage.getItem(key);
+  if(current===status){
+    localStorage.removeItem(key);
+    applyStatus(unitId,null);
+  } else {
+    localStorage.setItem(key,status);
+    applyStatus(unitId,status);
+  }
+}
+function applyStatus(unitId,status){
+  var card=document.querySelector('.unit-card[data-unit="'+unitId+'"]');
+  if(!card)return;
+  card.setAttribute('data-status',status||'');
+  ['A','B','C'].forEach(function(s){
+    var b=card.querySelector('.btn-'+s.toLowerCase());
+    if(b)b.classList.toggle('active-'+s.toLowerCase(),status===s);
+  });
+}
+function loadAllStatus(){
+  document.querySelectorAll('.unit-card[data-unit]').forEach(function(card){
+    var unitId=card.getAttribute('data-unit');
+    var status=localStorage.getItem('koumin_qu_'+unitId);
+    if(status)applyStatus(unitId,status);
+  });
+}
+
+// ── KaTeX レンダリング ──
+function renderMath(){
+  document.querySelectorAll('.unit-sub').forEach(function(el){
+    el.innerHTML=el.innerHTML.replace(/\$([^$]+)\$/g,function(_,m){
+      try{return katex.renderToString(m,{throwOnError:false,displayMode:false});}
+      catch(e){return '$'+m+'$';}
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderMath();
+  loadAllStatus();
+  // 前回のタブを復元
+  var saved=localStorage.getItem('koumin_qu_tab');
+  if(saved==='jo')switchTab('jo');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KQU11 確認テスト　平行移動・対称移動の応用</title>
+<style>
+:root{
+  --primary:#0f766e;--primary-d:#0d5c56;--primary-l:#f0fdfa;
+  --hint:#f59e0b;--hint-bg:#fffbeb;--warn:#dc2626;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --green:#059669;--green-l:#f0fdf4;--purple:#9333ea;--purple-l:#faf5ff;
+  --blue:#0284c7;--blue-l:#eff6ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'BIZ UDPGothic',sans-serif;line-height:1.8;font-size:15px;overflow-x:hidden}
+header{position:sticky;top:0;background:var(--primary);color:#fff;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10}
+header h1{margin:0;font-size:1.05em;font-weight:700}
+header .sub{font-size:.78em;opacity:.88;margin-top:2px}
+.steps{display:flex;background:#fff;border-bottom:1px solid var(--border)}
+.step{flex:1;text-align:center;padding:8px 4px;font-size:.78em;font-weight:700;color:var(--muted);border-bottom:3px solid var(--border)}
+.step.active{color:var(--primary);border-color:var(--primary)}
+.wrap{max-width:680px;margin:0 auto;padding:16px 16px 40px}
+.intro-box{background:var(--primary-l);border:1.5px solid #99f6e4;border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:.95em;line-height:1.9}
+.intro-box strong{color:var(--primary-d)}
+.timer-wrap{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:10px 16px;margin-bottom:14px}
+.timer-label{font-size:.85em;color:var(--muted)}
+.timer-display{font-size:1.4em;font-weight:700;color:var(--primary);letter-spacing:.05em}
+.timer-display.warn{color:var(--warn)}
+.drill-card{background:var(--card);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid var(--border)}
+.q-num{font-size:.82em;font-weight:700;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.q-tag{font-size:.75em;padding:2px 8px;border-radius:10px;font-weight:700}
+.tag-mv{background:var(--primary-l);color:var(--primary-d)}
+.tag-sx{background:var(--blue-l);color:var(--blue)}
+.tag-sy{background:var(--green-l);color:var(--green)}
+.tag-so{background:var(--purple-l);color:var(--purple)}
+.tag-mix{background:#fef9c3;color:#92400e}
+.q-text{font-size:1.02em;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.7}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice{padding:11px 10px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:.92em;text-align:center;transition:.15s;font-weight:500;line-height:1.5}
+.choice:hover{border-color:var(--primary);background:var(--primary-l)}
+.choice.selected{border-color:var(--primary);background:var(--primary-l);color:var(--primary-d)}
+.choice.correct{border-color:var(--green);background:var(--green-l);color:#065f46;font-weight:700}
+.choice.wrong{border-color:var(--warn);background:#fef2f2;color:var(--warn);font-weight:700}
+.feedback{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.9em;line-height:2.1}
+.feedback.show{display:block}
+.feedback.ok-fb{background:var(--green-l);border-left:4px solid var(--green);color:#065f46}
+.feedback.ng-fb{background:#fef2f2;border-left:4px solid var(--warn);color:#991b1b}
+.fb-steps{margin-top:8px;background:#fff;border-radius:8px;padding:10px 12px;border:1px solid var(--border);font-size:.93em;line-height:2.3;color:var(--text)}
+.fb-key{background:#fef9c3;border-radius:3px;padding:0 3px;color:#92400e;font-weight:700}
+.submit-row{text-align:center;margin:20px 0 8px}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:13px 40px;border-radius:10px;font-size:1em;font-weight:700;cursor:pointer}
+.btn-submit:disabled{background:#94a3b8;cursor:default}
+.result-box{display:none;margin:16px 0;padding:20px;border-radius:12px;text-align:center;border:2px solid var(--border)}
+.result-box.show{display:block}
+.result-box.passed{border-color:var(--green);background:var(--green-l)}
+.result-box.failed{border-color:var(--warn);background:#fef2f2}
+.result-msg{font-size:1.3em;font-weight:700;margin-bottom:6px}
+.result-score{font-size:2.5em;font-weight:700;color:var(--primary);margin:6px 0}
+.result-detail{font-size:.92em;color:var(--muted);margin-top:4px}
+.next-hint{background:var(--primary-l);border:1.5px solid #99f6e4;border-radius:8px;padding:12px 14px;margin-top:14px;font-size:.92em;color:var(--primary-d);line-height:1.9}
+.nav{display:flex;gap:10px;margin-top:20px}
+.btn{display:block;padding:12px 16px;border-radius:10px;text-decoration:none;text-align:center;font-weight:700;font-size:.95em;flex:1}
+.btn-back{background:#f1f5f9;color:var(--muted)}
+.btn-next{background:var(--primary);color:#fff}
+@keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;animation:confetti-fall 2.5s ease-in forwards;pointer-events:none;z-index:9999}
+</style>
+</head>
+<body>
+<header>
+  <h1>KQU11　確認テスト　平行移動・対称移動の応用</h1>
+  <div class="sub">公務員初級 ── 全8問・一発勝負！</div>
+</header>
+<div class="steps">
+  <div class="step"><a href="./KQU11_intro_v2.html" style="color:inherit;text-decoration:none">① 解説</a></div>
+  <div class="step"><a href="./KQU11_drill_v2.html" style="color:inherit;text-decoration:none">② 演習</a></div>
+  <div class="step active">③ 確認</div>
+</div>
+<div class="wrap">
+<div class="intro-box">
+  <strong>📋 確認テスト　全8問</strong><br>
+  平行移動・x軸対称・y軸対称・原点対称・組み合わせから出題します。<br>
+  <strong>8問中7問以上正解</strong>で合格 → KQU12「判別式の応用」へ進めます！
+</div>
+<div class="timer-wrap">
+  <span class="timer-label">⏱ 経過時間</span>
+  <span class="timer-display" id="timer">00:00</span>
+</div>
+<div id="quiz-area"></div>
+<div class="submit-row">
+  <button class="btn-submit" id="btn-submit" onclick="grade()">採点する</button>
+</div>
+<div class="result-box" id="result">
+  <div class="result-msg" id="result-msg"></div>
+  <div class="result-score" id="result-score"></div>
+  <div class="result-detail" id="result-detail"></div>
+  <div class="next-hint" id="next-hint" style="display:none"></div>
+</div>
+<div class="nav">
+  <a href="./KQU11_drill_v2.html" class="btn btn-back">← 演習へ戻る</a>
+  <a href="./KQU12_intro.html" class="btn btn-next">KQU12 へ進む →</a>
+</div>
+</div>
+<script>
+const QS=[
+  {q:'【平行移動】　y＝3x² を x 軸方向に－2、y 軸方向に 5 だけ平行移動した式はどれか？',
+   choices:['y＝3(x＋2)²＋5','y＝3(x－2)²＋5','y＝3(x＋2)²－5','y＝3(x－2)²－5'],
+   ans:0,tag:'tag-mv',tagLabel:'平行移動',
+   exp:'正解 <b>y＝3(x＋2)²＋5</b>',
+   steps:['左に2移動 → x を(x＋2) に、y 軸方向に＋5 → ＋5','y＝3(x＋2)²＋5','<span class="fb-key">左移動は(x＋p)！符号が逆になる</span>']},
+  {q:'【平行移動】　y＝x²＋4x－1 を x 軸方向に 2、y 軸方向に 3 平行移動した式はどれか？',
+   choices:['y＝x²－2','y＝x²＋2','y＝x²＋8x＋11','y＝x²－8x＋11'],
+   ans:0,tag:'tag-mv',tagLabel:'平行移動',
+   exp:'正解 <b>y＝x²－2</b>',
+   steps:['x を(x－2)、y を(y－3) に代入','y－3＝(x－2)²＋4(x－2)－1＝x²－5','y＝x²－2']},
+  {q:'【x軸対称】　y＝x²－4x－5 を x 軸に対称移動した式はどれか？',
+   choices:['y＝－x²＋4x＋5','y＝x²＋4x－5','y＝－x²－4x＋5','y＝x²＋4x＋5'],
+   ans:0,tag:'tag-sx',tagLabel:'x軸対称',
+   exp:'正解 <b>y＝－x²＋4x＋5</b>',
+   steps:['y を－y に置き換える','－y＝x²－4x－5','y＝－x²＋4x＋5','<span class="fb-key">全係数の符号が逆！</span>']},
+  {q:'【y軸対称】　y＝x²－2x－3 を y 軸に対称移動した式はどれか？',
+   choices:['y＝x²＋2x－3','y＝－x²＋2x－3','y＝x²－2x＋3','y＝x²＋2x＋3'],
+   ans:0,tag:'tag-sy',tagLabel:'y軸対称',
+   exp:'正解 <b>y＝x²＋2x－3</b>',
+   steps:['x を－x に置き換える','y＝(－x)²－2(－x)－3＝x²＋2x－3','<span class="fb-key">x の1次の係数だけ符号が変わる！</span>']},
+  {q:'【原点対称】　y＝－2x²＋3x－1 を原点に対称移動した式はどれか？',
+   choices:['y＝2x²＋3x＋1','y＝2x²－3x＋1','y＝－2x²－3x＋1','y＝2x²＋3x－1'],
+   ans:0,tag:'tag-so',tagLabel:'原点対称',
+   exp:'正解 <b>y＝2x²＋3x＋1</b>',
+   steps:['x を－x、y を－y に置き換える','－y＝－2(－x)²＋3(－x)－1＝－2x²－3x－1','y＝2x²＋3x＋1']},
+  {q:'【原点対称】　y＝2x²－4x＋4 を原点に対称移動した式はどれか？',
+   choices:['y＝－2x²－4x－4','y＝2x²＋4x＋4','y＝－2x²＋4x－4','y＝－2x²－4x＋4'],
+   ans:0,tag:'tag-so',tagLabel:'原点対称',
+   exp:'正解 <b>y＝－2x²－4x－4</b>',
+   steps:['x を－x、y を－y に代入','－y＝2(－x)²－4(－x)＋4＝2x²＋4x＋4','y＝－2x²－4x－4']},
+  {q:'【組み合わせ】　y＝x²＋2x－3 を x 軸方向に－3、y 軸方向に 3 平行移動してから原点対称移動した式はどれか？',
+   choices:['y＝－x²＋8x－15','y＝x²－8x＋15','y＝－x²－8x＋15','y＝x²＋8x＋15'],
+   ans:0,tag:'tag-mix',tagLabel:'組み合わせ',
+   exp:'正解 <b>y＝－x²＋8x－15</b>',
+   steps:['① 平行移動：x を(x＋3)、y を(y－3) に代入','y＝x²＋8x＋15','② 原点対称：x を－x、y を－y に代入','－y＝x²－8x＋15　→　<span class="fb-key">y＝－x²＋8x－15</span>']},
+  {q:'【組み合わせ】　y＝(x－2)²－3 を x 軸方向に－3、y 軸方向に 6 平行移動した式はどれか？',
+   choices:['y＝(x＋1)²＋3','y＝(x－1)²＋3','y＝(x＋1)²－3','y＝(x＋1)²＋9'],
+   ans:0,tag:'tag-mix',tagLabel:'組み合わせ',
+   exp:'正解 <b>y＝(x＋1)²＋3</b>',
+   steps:['x を(x＋3)、y を(y－6) に代入','y－6＝{(x＋3)－2}²－3＝(x＋1)²－3','y＝(x＋1)²－3＋6＝<span class="fb-key">(x＋1)²＋3</span>']}
+];
+
+let timerSec=0;
+const timerInterval=setInterval(()=>{
+  timerSec++;
+  const m=String(Math.floor(timerSec/60)).padStart(2,'0');
+  const s=String(timerSec%60).padStart(2,'0');
+  const el=document.getElementById('timer');
+  el.textContent=m+':'+s;
+  el.className='timer-display'+(timerSec>400?' warn':'');
+},1000);
+
+function buildQuiz(){
+  const area=document.getElementById('quiz-area');
+  area.innerHTML='';
+  QS.forEach((q,i)=>{
+    const card=document.createElement('div');
+    card.className='drill-card';
+    card.dataset.q=i;
+    card.innerHTML=`
+      <div class="q-num"><span>問 ${i+1} / ${QS.length}</span><span class="q-tag ${q.tag}">${q.tagLabel}</span></div>
+      <div class="q-text">${q.q}</div>
+      <div class="choices">${q.choices.map((c,j)=>`<button class="choice" data-i="${j}" onclick="pick(this,${i})">${c}</button>`).join('')}</div>
+      <div class="feedback" id="fb-${i}"></div>
+    `;
+    area.appendChild(card);
+  });
+}
+function pick(btn,qIdx){
+  const card=btn.closest('.drill-card');
+  if(card.dataset.chosen) return;
+  card.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  card.dataset.chosen=btn.dataset.i;
+}
+function grade(){
+  clearInterval(timerInterval);
+  let correct=0,allAnswered=true;
+  QS.forEach((q,i)=>{
+    const card=document.querySelector(`.drill-card[data-q="${i}"]`);
+    const chosen=card.dataset.chosen;
+    if(!chosen){allAnswered=false;alert(`問${i+1}がまだ選択されていません`);return;}
+    const isOK=parseInt(chosen)===q.ans;
+    if(isOK) correct++;
+    card.querySelectorAll('.choice').forEach(b=>{
+      b.disabled=true;
+      if(parseInt(b.dataset.i)===q.ans) b.classList.add('correct');
+      if(parseInt(b.dataset.i)===parseInt(chosen)&&!isOK) b.classList.add('wrong');
+    });
+    const fb=document.getElementById(`fb-${i}`);
+    fb.innerHTML=q.exp+'<div class="fb-steps">'+q.steps.map(s=>`<div>${s}</div>`).join('')+'</div>';
+    fb.className='feedback show '+(isOK?'ok-fb':'ng-fb');
+  });
+  if(!allAnswered) return;
+  const passed=correct>=7;
+  const m=String(Math.floor(timerSec/60)).padStart(2,'0');
+  const s=String(timerSec%60).padStart(2,'0');
+  const result=document.getElementById('result');
+  result.className='result-box show '+(passed?'passed':'failed');
+  document.getElementById('result-msg').textContent=passed?'🎉 合格！':'もう少し！再挑戦しよう';
+  document.getElementById('result-score').textContent=`${correct} / ${QS.length}`;
+  document.getElementById('result-detail').textContent=
+    `所要時間：${m}:${s}　`+(passed
+      ?'平行移動・対称移動をマスターしました！'
+      :`あと ${7-correct} 問正解で合格。解説を読んで再挑戦しましょう。`);
+  const hint=document.getElementById('next-hint');
+  if(passed){
+    hint.style.display='block';
+    hint.innerHTML='✅ 次のステップ：<strong>KQU12「判別式の応用」</strong>へ進みましょう！<br>常に正・常に負になる条件を学びます。';
+    confetti();setTimeout(confetti,700);
+  }
+  document.getElementById('btn-submit').disabled=true;
+  document.getElementById('btn-submit').textContent='採点済み';
+}
+function confetti(){
+  const colors=['#0f766e','#f59e0b','#059669','#0284c7','#9333ea','#dc2626'];
+  for(let i=0;i<70;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${colors[i%6]};animation-delay:${Math.random()*1.2}s;animation-duration:${2+Math.random()}s;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3500);
+  }
+}
+buildQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>公務員数学 二次関数 チェック問題</title>
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+/* ── 画面用スタイル ── */
+:root{
+  --primary:#0f766e;--primary-d:#0d5c56;--primary-l:#f0fdfa;
+  --jo:#4f46e5;--jo-l:#eef2ff;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --green:#059669;--green-l:#f0fdf4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'BIZ UDPGothic',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.9;padding-bottom:60px}
+
+/* 印刷ボタンエリア */
+.print-bar{
+  position:sticky;top:0;z-index:100;
+  background:#1e293b;color:#fff;
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.print-bar h1{font-size:14px;font-weight:700}
+.print-bar .btns{display:flex;gap:8px}
+.pbtn{padding:8px 16px;border-radius:8px;border:none;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.pbtn-print{background:#0f766e;color:#fff}
+.pbtn-ans{background:#f59e0b;color:#fff}
+.pbtn-back{background:#475569;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
+
+.wrap{max-width:740px;margin:0 auto;padding:20px 16px 40px}
+
+/* 単元ヘッダー */
+.unit-header{
+  background:var(--card);border-radius:12px;padding:14px 18px;
+  margin-bottom:14px;border:1.5px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.unit-badge{
+  min-width:52px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;
+}
+.badge-sho{background:var(--primary-l);color:var(--primary);border:1.5px solid #99f6e4}
+.badge-jo{background:var(--jo-l);color:var(--jo);border:1.5px solid #c7d2fe}
+.unit-title{font-size:15px;font-weight:700}
+.unit-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* 問題カード */
+.q-card{
+  background:var(--card);border-radius:12px;padding:16px 18px;
+  margin-bottom:12px;border:1px solid var(--border);
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+}
+.q-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border-radius:50%;
+  font-size:13px;font-weight:700;color:#fff;
+  margin-right:8px;flex-shrink:0;
+}
+.q-num.sho{background:var(--primary)}
+.q-num.jo{background:var(--jo)}
+.q-text{font-size:14px;line-height:1.9;margin-bottom:10px}
+.answer-box{
+  border:1.5px dashed #cbd5e1;border-radius:8px;
+  min-height:60px;margin-top:8px;padding:8px 10px;
+  font-size:12px;color:#94a3b8;
+  position:relative;
+}
+.answer-box::before{content:'解答欄';position:absolute;top:6px;left:10px;font-size:11px;color:#cbd5e1}
+
+/* 解答 */
+.ans-block{
+  display:none;
+  background:var(--green-l);border:1.5px solid var(--green);
+  border-radius:8px;padding:10px 14px;margin-top:8px;
+  font-size:13px;line-height:1.9;color:#1e293b;
+}
+.ans-block.show{display:block}
+.ans-label{font-weight:700;color:var(--green);font-size:12px;margin-bottom:4px}
+
+/* セクション区切り */
+.section-title{
+  font-size:16px;font-weight:700;color:var(--text);
+  margin:24px 0 12px;padding-bottom:6px;
+  border-bottom:2px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+
+/* ── 印刷スタイル ── */
+@media print{
+  @page{size:A4;margin:15mm 12mm}
+  body{background:#fff;font-size:13px;padding:0}
+  .print-bar{display:none!important}
+  .wrap{padding:0;max-width:100%}
+  .q-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc;margin-bottom:10px;padding:12px 14px}
+  .answer-box{min-height:70px;border:1.5px dashed #aaa}
+  .ans-block{display:none!important}
+  .unit-header{break-inside:avoid;box-shadow:none}
+  .section-title{margin:16px 0 10px}
+  .pbtn-ans,.pbtn-print,.pbtn-back{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- 印刷バー -->
+<div class="print-bar">
+  <h1>🖨️ 公務員数学 二次関数 チェック問題</h1>
+  <div class="btns">
+    <button class="pbtn pbtn-ans" onclick="toggleAnswers()">解答を表示／非表示</button>
+    <button class="pbtn pbtn-print" onclick="window.print()">🖨️ 印刷する</button>
+    <a class="pbtn pbtn-back" href="kounin_math_index_koumin.html">← 目次へ</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ヘッダー情報（印刷時に表示） -->
+<div style="display:none" class="print-only" id="print-header">
+  <div style="text-align:center;margin-bottom:16px">
+    <div style="font-size:18px;font-weight:700">公務員数学 二次関数 チェック問題</div>
+    <div style="font-size:12px;color:#64748b;margin-top:4px">江原予備校 GAMBA 公務員対策</div>
+    <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:12px">
+      <span>氏名：_______________</span>
+      <span>実施日：_____ 年 _____ 月 _____ 日</span>
+      <span>点数：_____ / 12点</span>
+    </div>
+    <hr style="margin-top:10px;border:1px solid #ccc">
+  </div>
+</div>
+
+<!-- ══ 初級 ══ -->
+<div class="section-title">
+  <span style="background:var(--primary);color:#fff;border-radius:6px;padding:2px 10px;font-size:13px">初級</span>
+  QU10〜QU12　高卒程度
+</div>
+
+<!-- QU10 -->
+<div class="unit-header">
+  <div class="unit-badge badge-sho">QU10</div>
+  <div>
+    <div class="unit-title">a≠1 の平方完成</div>
+    <div class="unit-sub">x²の係数をくくり出して平方完成する</div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num sho">1</span>
+    <div class="q-text">次の二次関数を平方完成して頂点の座標を求めよ。<br>
+    <span id="q1"></span>
+    </div>
+  </div>
+  <div class="answer-box"></div>
+  <div class="ans-block" id="a1">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a1_content"></div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num sho">2</span>
+    <div class="q-text">次の二次関数を平方完成して頂点の座標を求めよ。<br>
+    <span id="q2"></span>
+    </div>
+  </div>
+  <div class="answer-box"></div>
+  <div class="ans-block" id="a2">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a2_content"></div>
+  </div>
+</div>
+
+<!-- QU11 -->
+<div class="unit-header" style="margin-top:16px">
+  <div class="unit-badge badge-sho">QU11</div>
+  <div>
+    <div class="unit-title">平行移動の応用</div>
+    <div class="unit-sub">x・y 両方向の平行移動と式の変換</div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num sho">3</span>
+    <div class="q-text">
+      <span id="q3"></span> を x 軸方向に 2、y 軸方向に −3 だけ平行移動した式を求めよ。
+    </div>
+  </div>
+  <div class="answer-box"></div>
+  <div class="ans-block" id="a3">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a3_content"></div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num sho">4</span>
+    <div class="q-text">
+      <span id="q4"></span> は、<span id="q4b"></span> をどのように平行移動した式か答えよ。
+    </div>
+  </div>
+  <div class="answer-box"></div>
+  <div class="ans-block" id="a4">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a4_content"></div>
+  </div>
+</div>
+
+<!-- QU12 -->
+<div class="unit-header" style="margin-top:16px">
+  <div class="unit-badge badge-sho">QU12</div>
+  <div>
+    <div class="unit-title">判別式の応用</div>
+    <div class="unit-sub">常に正・常に負になる定数の範囲</div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num sho">5</span>
+    <div class="q-text">
+      <span id="q5"></span> がすべての実数 x に対して y &gt; 0 となる定数 k の範囲を求めよ。
+    </div>
+  </div>
+  <div class="answer-box"></div>
+  <div class="ans-block" id="a5">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a5_content"></div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num sho">6</span>
+    <div class="q-text">
+      <span id="q6"></span> がすべての実数 x に対して y &lt; 0 となる定数 k の範囲を求めよ。
+    </div>
+  </div>
+  <div class="answer-box"></div>
+  <div class="ans-block" id="a6">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a6_content"></div>
+  </div>
+</div>
+
+
+<!-- ══ 上級 ══ -->
+<div class="section-title" style="margin-top:28px">
+  <span style="background:var(--jo);color:#fff;border-radius:6px;padding:2px 10px;font-size:13px">上級</span>
+  QU13〜QU15　大卒程度
+</div>
+
+<!-- QU13 -->
+<div class="unit-header">
+  <div class="unit-badge badge-jo">QU13</div>
+  <div>
+    <div class="unit-title">動く区間の最大・最小</div>
+    <div class="unit-sub">t ≦ x ≦ t+2 の区間での最小値（場合分け）</div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num jo">7</span>
+    <div class="q-text">
+      <span id="q7"></span>　（<span id="q7b"></span>）<br>
+      この二次関数の最小値 m(t) を t を用いて表せ。
+    </div>
+  </div>
+  <div class="answer-box" style="min-height:90px"></div>
+  <div class="ans-block" id="a7">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a7_content"></div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num jo">8</span>
+    <div class="q-text">
+      <span id="q8"></span>　（<span id="q8b"></span>）<br>
+      この二次関数の最小値 m(t) を t を用いて表せ。
+    </div>
+  </div>
+  <div class="answer-box" style="min-height:90px"></div>
+  <div class="ans-block" id="a8">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a8_content"></div>
+  </div>
+</div>
+
+<!-- QU14 -->
+<div class="unit-header" style="margin-top:16px">
+  <div class="unit-badge badge-jo">QU14</div>
+  <div>
+    <div class="unit-title">2次不等式（文字係数）</div>
+    <div class="unit-sub">a の正負で場合分けして解く</div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num jo">9</span>
+    <div class="q-text">
+      <span id="q9"></span> がすべての実数 x に対して成り立つ定数 a の範囲を求めよ。
+    </div>
+  </div>
+  <div class="answer-box" style="min-height:80px"></div>
+  <div class="ans-block" id="a9">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a9_content"></div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num jo">10</span>
+    <div class="q-text">
+      不等式 <span id="q10"></span> を a の値で場合分けして解け。
+    </div>
+  </div>
+  <div class="answer-box" style="min-height:90px"></div>
+  <div class="ans-block" id="a10">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a10_content"></div>
+  </div>
+</div>
+
+<!-- QU15 -->
+<div class="unit-header" style="margin-top:16px">
+  <div class="unit-badge badge-jo">QU15</div>
+  <div>
+    <div class="unit-title">条件付き最小値</div>
+    <div class="unit-sub">条件式で変数を減らして最小値を求める</div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num jo">11</span>
+    <div class="q-text">
+      x、y が実数で <span id="q11c"></span> を満たすとき、<span id="q11f"></span> の最小値を求めよ。
+    </div>
+  </div>
+  <div class="answer-box" style="min-height:80px"></div>
+  <div class="ans-block" id="a11">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a11_content"></div>
+  </div>
+</div>
+
+<div class="q-card">
+  <div style="display:flex;align-items:flex-start">
+    <span class="q-num jo">12</span>
+    <div class="q-text">
+      x、y が実数で <span id="q12c"></span> を満たすとき、<span id="q12f"></span> の最小値を求めよ。<br>
+      <span style="font-size:12px;color:var(--muted)">（地方上級・国家一般職レベル）</span>
+    </div>
+  </div>
+  <div class="answer-box" style="min-height:80px"></div>
+  <div class="ans-block" id="a12">
+    <div class="ans-label">✅ 解答</div>
+    <div id="a12_content"></div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+function k(e){return katex.renderToString(e,{throwOnError:false,displayMode:false});}
+function kd(e){return katex.renderToString(e,{throwOnError:false,displayMode:true});}
+
+// ── 問題文 ──
+document.getElementById('q1').innerHTML = k('y = 2x^2 - 8x + 3');
+document.getElementById('q2').innerHTML = k('y = -3x^2 + 6x + 1');
+document.getElementById('q3').innerHTML = k('y = 2x^2');
+document.getElementById('q4').innerHTML = k('y = 3x^2 + 6x + 5');
+document.getElementById('q4b').innerHTML = k('y = 3x^2');
+document.getElementById('q5').innerHTML = k('y = x^2 - 4x + k');
+document.getElementById('q6').innerHTML = k('y = -x^2 + 2x + k');
+document.getElementById('q7').innerHTML = k('y = x^2 - 2x + 3');
+document.getElementById('q7b').innerHTML = k('t \\leqq x \\leqq t+2');
+document.getElementById('q8').innerHTML = k('y = x^2 - 4x + 5');
+document.getElementById('q8b').innerHTML = k('t \\leqq x \\leqq t+2');
+document.getElementById('q9').innerHTML = k('ax^2 - 4x + a > 0');
+document.getElementById('q10').innerHTML = k('ax > 6');
+document.getElementById('q11c').innerHTML = k('x + y = 1');
+document.getElementById('q11f').innerHTML = k('x^2 + 3y^2');
+document.getElementById('q12c').innerHTML = k('2x + y = 4');
+document.getElementById('q12f').innerHTML = k('x^2 + y^2');
+
+// ── 解答 ──
+document.getElementById('a1_content').innerHTML =
+  kd('y=2(x^2-4x)+3=2\\{(x-2)^2-4\\}+3=2(x-2)^2-5') +
+  '頂点 ' + k('(2,\\ -5)');
+
+document.getElementById('a2_content').innerHTML =
+  kd('y=-3(x^2-2x)+1=-3\\{(x-1)^2-1\\}+1=-3(x-1)^2+4') +
+  '頂点 ' + k('(1,\\ 4)');
+
+document.getElementById('a3_content').innerHTML =
+  'x を (x－2) に置き換えて −3 を足す<br>' +
+  kd('y = 2(x-2)^2 - 3');
+
+document.getElementById('a4_content').innerHTML =
+  '平方完成：' + kd('y=3x^2+6x+5=3(x+1)^2+2') +
+  '頂点 (−1, 2) → y＝3x² を <strong>x 軸方向に −1、y 軸方向に 2</strong> だけ平行移動した式';
+
+document.getElementById('a5_content').innerHTML =
+  'a＝1 &gt; 0、D＝(−4)²−4k＝16−4k &lt; 0<br>' + kd('k > 4');
+
+document.getElementById('a6_content').innerHTML =
+  'a＝−1 &lt; 0、D＝2²−4(−1)k＝4＋4k &lt; 0<br>' + kd('k < -1');
+
+document.getElementById('a7_content').innerHTML =
+  '平方完成：' + k('y=(x-1)^2+2') + '、軸 x＝1、区間中点 t＋1<br>' +
+  kd('m(t) = \\begin{cases} t^2+2t+3 & (t < -1) \\\\ 2 & (-1 \\leqq t \\leqq 1) \\\\ t^2-2t+3 & (t > 1) \\end{cases}');
+
+document.getElementById('a8_content').innerHTML =
+  '平方完成：' + k('y=(x-2)^2+1') + '、軸 x＝2、区間中点 t＋1<br>' +
+  kd('m(t) = \\begin{cases} t^2+1 & (t < 0) \\\\ 1 & (0 \\leqq t \\leqq 2) \\\\ t^2-4t+5 & (t > 2) \\end{cases}');
+
+document.getElementById('a9_content').innerHTML =
+  'a &gt; 0 かつ D &lt; 0 が条件<br>' +
+  kd('D=16-4a^2 < 0 \\Rightarrow a^2 > 4') +
+  'a &gt; 0 と合わせると　' + k('a > 2');
+
+document.getElementById('a10_content').innerHTML =
+  '・a＝0 のとき：0 &gt; 6 → 解なし<br>' +
+  '・a &gt; 0 のとき：' + kd('x > \\dfrac{6}{a}') +
+  '・a &lt; 0 のとき：' + kd('x < \\dfrac{6}{a}');
+
+document.getElementById('a11_content').innerHTML =
+  'y＝1−x を代入：' + kd('x^2+3(1-x)^2=4x^2-6x+3=4\\left(x-\\dfrac{3}{4}\\right)^2+\\dfrac{3}{4}') +
+  '最小値 ' + k('\\dfrac{3}{4}') + '　（' + k('x=\\dfrac{3}{4}, y=\\dfrac{1}{4}') + ' のとき）';
+
+document.getElementById('a12_content').innerHTML =
+  'y＝4−2x を代入：' + kd('x^2+(4-2x)^2=5x^2-16x+16=5\\left(x-\\dfrac{8}{5}\\right)^2+\\dfrac{16}{5}') +
+  '最小値 ' + k('\\dfrac{16}{5}') + '　（' + k('x=\\dfrac{8}{5}, y=\\dfrac{4}{5}') + ' のとき）';
+
+// ── 解答表示切り替え ──
+var answersVisible = false;
+function toggleAnswers(){
+  answersVisible = !answersVisible;
+  document.querySelectorAll('.ans-block').forEach(function(el){
+    el.classList.toggle('show', answersVisible);
+  });
+}
+
+// 印刷時にヘッダーを表示
+window.addEventListener('beforeprint', function(){
+  document.getElementById('print-header').style.display='block';
+});
+window.addEventListener('afterprint', function(){
+  document.getElementById('print-header').style.display='none';
+});
+</script>
+</body>
+</html>

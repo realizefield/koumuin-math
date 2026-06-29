@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KQU13 動く区間の最大・最小</title>
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+:root{
+  --primary:#4f46e5;--primary-d:#3730a3;--primary-l:#eef2ff;
+  --hint:#f59e0b;--hint-bg:#fffbeb;--warn:#dc2626;--warn-bg:#fef2f2;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --green:#059669;--green-l:#f0fdf4;--blue:#0284c7;--blue-l:#eff6ff;
+  --red:#dc2626;--orange:#ea580c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'BIZ UDPGothic',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:2;padding-bottom:60px;overflow-x:hidden}
+header{position:sticky;top:0;background:var(--primary);color:#fff;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10}
+header h1{margin:0;font-size:1.05em;font-weight:700}
+header .sub{font-size:.78em;opacity:.88;margin-top:2px}
+.steps{display:flex;background:#fff;border-bottom:1px solid var(--border)}
+.step{flex:1;text-align:center;padding:8px 4px;font-size:.78em;font-weight:700;color:var(--muted);border-bottom:3px solid var(--border)}
+.step.active{color:var(--primary);border-color:var(--primary)}
+.wrap{max-width:680px;margin:0 auto;padding:16px 16px 40px}
+.section{background:var(--card);border-radius:12px;padding:20px 22px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid var(--border)}
+.section h2{margin:0 0 16px;font-size:1.05em;color:var(--primary-d);border-left:4px solid var(--primary);padding-left:10px;line-height:1.5}
+.tip{background:var(--hint-bg);border-left:4px solid var(--hint);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.93em;line-height:1.9}
+.tip b{color:#92400e}
+.warn-box{background:var(--warn-bg);border-left:4px solid var(--warn);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.93em;line-height:1.9}
+.point-box{background:var(--green-l);border:2px solid var(--green);border-radius:10px;padding:16px 18px;margin:16px 0}
+.point-box h4{margin:0 0 10px;color:var(--green);font-size:.95em;font-weight:700}
+.blue-box{background:var(--blue-l);border-left:4px solid var(--blue);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.93em;line-height:1.9}
+.example{background:var(--primary-l);border-left:4px solid var(--primary);border-radius:8px;padding:14px 16px;margin:14px 0}
+.example .ex-title{font-weight:700;color:var(--primary-d);margin-bottom:10px;font-size:.97em}
+.calc-box{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.95em;line-height:2.6}
+.step-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.step-num{min-width:34px;height:34px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9em;flex-shrink:0;margin-top:2px}
+.step-body{flex:1;background:#f8fafc;border-radius:10px;padding:12px 14px;border:1px solid var(--border);font-size:.93em;line-height:2}
+.step-body .step-title{font-weight:700;color:var(--primary-d);margin-bottom:6px}
+.step-body .sub-note{font-size:.85em;color:var(--muted);margin-top:6px;line-height:1.7}
+.case-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0}
+.case-box{border-radius:10px;padding:12px 10px;text-align:center;border:2px solid}
+.case-box h4{font-size:.82em;font-weight:700;margin-bottom:6px}
+.case-box .meaning{font-size:.78em;color:var(--muted);margin-top:4px;line-height:1.6}
+.case-a{border-color:var(--blue);background:var(--blue-l)}
+.case-a h4{color:var(--blue)}
+.case-b{border-color:var(--green);background:var(--green-l)}
+.case-b h4{color:var(--green)}
+.case-c{border-color:var(--orange);background:#fff7ed}
+.case-c h4{color:var(--orange)}
+table.summary{border-collapse:collapse;width:100%;margin:12px 0;font-size:.9em}
+table.summary th{background:var(--primary);color:#fff;padding:9px 8px;text-align:center}
+table.summary td{padding:9px 8px;border:1px solid var(--border);vertical-align:middle;line-height:1.8;text-align:center}
+table.summary tr:nth-child(even) td{background:var(--primary-l)}
+.hl-red{background:#fef2f2;color:var(--red);font-weight:700;border-radius:3px;padding:0 3px}
+.hl-grn{background:var(--green-l);color:var(--green);font-weight:700;border-radius:3px;padding:0 3px}
+.hl-blu{background:var(--blue-l);color:var(--blue);font-weight:700;border-radius:3px;padding:0 3px}
+.hl-org{background:#fff7ed;color:var(--orange);font-weight:700;border-radius:3px;padding:0 3px}
+.nav{display:flex;gap:10px;margin-top:22px}
+.btn{display:block;padding:13px 16px;border-radius:10px;text-decoration:none;text-align:center;font-weight:700;font-size:.95em;flex:1}
+.btn-back{background:#f1f5f9;color:var(--muted)}
+.btn-next{background:var(--primary);color:#fff}
+/* 折り畳みミニテスト */
+.mini-toggle-btn{width:100%;margin-top:18px;padding:13px 18px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid var(--hint);border-radius:12px;font-family:'BIZ UDPGothic',sans-serif;font-size:.97em;font-weight:700;color:#92400e;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;transition:background .2s;-webkit-tap-highlight-color:transparent;}
+.mini-toggle-btn .left-part{display:flex;align-items:center;gap:8px}
+.mini-toggle-btn .arrow{font-size:1.2em;transition:transform .3s;display:inline-block}
+.mini-toggle-btn.open .arrow{transform:rotate(90deg)}
+.mini-prog-badge{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1.5px solid var(--hint);border-radius:20px;padding:2px 10px;font-size:.8em;color:#92400e;font-weight:700;}
+.mini-body{display:none;background:linear-gradient(135deg,#fffbeb 0%,#f0fdf4 100%);border:2px solid var(--hint);border-top:none;border-radius:0 0 12px 12px;padding:16px 18px;}
+.mini-body.open{display:block}
+.mq-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.mq-card.solved{border-color:var(--green);background:#f0fdf4}
+.mq-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--hint);color:#fff;border-radius:50%;font-size:12px;font-weight:700;margin-right:6px;flex-shrink:0}
+.mq-q{font-size:.93em;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.8;display:flex;align-items:flex-start}
+.mq-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.mq-btn{padding:11px 8px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-family:'BIZ UDPGothic',sans-serif;font-size:.88em;cursor:pointer;text-align:center;transition:.15s;line-height:1.6;-webkit-tap-highlight-color:transparent;}
+.mq-btn:hover:not(:disabled){border-color:var(--hint);background:#fffbeb}
+.mq-btn.correct{border-color:var(--green)!important;background:var(--green-l)!important;color:#065f46;font-weight:700}
+.mq-btn.wrong{border-color:var(--red)!important;background:#fef2f2!important;color:var(--red)}
+.mq-btn.reveal{border-color:var(--green)!important;background:var(--green-l)!important;color:#065f46;font-weight:700}
+.mq-btn:disabled{cursor:default}
+.mq-result{display:none;border-radius:8px;padding:10px 14px;margin-top:6px;font-size:.91em;line-height:2}
+.mq-result.ok{background:var(--green-l);border:1.5px solid var(--green);color:#065f46}
+.mq-result.ng{background:#fef2f2;border:1.5px solid var(--red);color:#991b1b}
+.mq-result.show{display:block}
+.expl-box{margin-top:8px;background:#fff;border-radius:8px;border:1px solid var(--border);padding:10px 12px;font-size:.88em;line-height:2.2}
+.expl-key{background:#fef9c3;border-radius:3px;padding:0 3px;color:#92400e;font-weight:700}
+.retry-btn{display:inline-block;margin-top:8px;padding:5px 14px;background:#fff;border:1.5px solid var(--border);border-radius:8px;font-size:.82em;cursor:pointer;font-family:'BIZ UDPGothic',sans-serif;color:var(--muted)}
+#confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<header>
+  <h1>KQU13　動く区間の最大・最小</h1>
+  <div class="sub">公務員上級 ── 区間が t で動くときの場合分け</div>
+</header>
+<div class="steps">
+  <div class="step active">① 解説</div>
+  <div class="step">② 演習</div>
+  <div class="step">③ 確認</div>
+</div>
+<div class="wrap">
+
+<!-- ══ 0．この単元の特徴 ══ -->
+<div class="section">
+  <h2>0．この単元のテーマ</h2>
+  <div class="blue-box">
+    <b>📖 問題のイメージ</b><br>
+    y＝(x－p)²＋q という二次関数で、x の範囲が<strong>「t ≦ x ≦ t＋2」のように t を使って動く</strong>とき、<br>
+    最小値（または最大値）を t を使った式で表せ。
+  </div>
+  <div class="tip"><b>💡 なぜ場合分けが必要なの？</b><br>
+    二次関数の最小値は<strong>頂点の y 座標</strong>ですが、<br>
+    頂点が区間の中にあるか・外にあるかで最小値を与える x が変わります。<br>
+    区間が t で動くので、t の値によって「頂点が区間内か外か」が変わる → <span class="hl-red">場合分けが必要！</span>
+  </div>
+</div>
+
+<!-- ══ 1．3つのパターン ══ -->
+<div class="section">
+  <h2>1．軸と区間の3つの位置関係</h2>
+  <p>y＝(x－p)²＋q の軸は <strong>x＝p</strong> です。区間 t ≦ x ≦ t＋2 との位置関係は3通りあります。</p>
+
+  <div class="case-grid">
+    <div class="case-box case-c">
+      <h4>パターン①<br>軸が区間の左外</h4>
+      <div style="font-size:.85em;margin:4px 0">p &lt; t</div>
+      <div class="meaning">最小値は<br>区間の<strong>左端</strong> x＝t<br>で生じる</div>
+    </div>
+    <div class="case-box case-b">
+      <h4>パターン②<br>軸が区間の中</h4>
+      <div style="font-size:.85em;margin:4px 0">t ≦ p ≦ t＋2</div>
+      <div class="meaning">最小値は<br><strong>頂点</strong>の値<br>q そのもの</div>
+    </div>
+    <div class="case-box case-a">
+      <h4>パターン③<br>軸が区間の右外</h4>
+      <div style="font-size:.85em;margin:4px 0">p &gt; t＋2</div>
+      <div class="meaning">最小値は<br>区間の<strong>右端</strong> x＝t＋2<br>で生じる</div>
+    </div>
+  </div>
+
+  <div class="point-box">
+    <h4>✅ 場合分けの境界を求める方法</h4>
+    <p>軸 x＝p が区間の端と一致する t の値が「境界」です。</p>
+    <div style="margin:10px 0" id="boundary_formula"></div>
+    <p style="font-size:.9em;color:var(--muted)">この2つの境界値で t の範囲を3つに分けて考えます。</p>
+  </div>
+</div>
+
+<!-- ══ 2．例題（最小値） ══ -->
+<div class="section">
+  <h2>2．例題　y＝(x－1)²＋2　（t ≦ x ≦ t＋2）の最小値</h2>
+  <div class="example">
+    <div class="ex-title">📌 例題　y＝x²－2x＋3＝(x－1)²＋2　（t ≦ x ≦ t＋2）<br>最小値 m(t) を t で表せ</div>
+  </div>
+  <p>軸は <strong>x＝1</strong>。区間の幅は 2 です。</p>
+
+  <div class="step-row" style="margin-top:14px">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">境界となる t の値を求める</div>
+      <div id="boundary_ex"></div>
+      <div class="sub-note">「軸＝左端」と「軸＝右端」の2つの境界を計算する</div>
+    </div>
+  </div>
+
+  <div class="step-row">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title"><span class="hl-org">t &gt; 1</span> のとき ── 軸が区間の左外（パターン①）</div>
+      <div id="case1_ex"></div>
+      <div class="sub-note">軸 x＝1 が区間の左端 x＝t より左 → 最小値は左端 x＝t で生じる</div>
+    </div>
+  </div>
+
+  <div class="step-row">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title"><span class="hl-grn">－1 ≦ t ≦ 1</span> のとき ── 軸が区間の中（パターン②）</div>
+      <div id="case2_ex"></div>
+      <div class="sub-note">軸 x＝1 が区間内 → 最小値は頂点の値 y＝2</div>
+    </div>
+  </div>
+
+  <div class="step-row">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title"><span class="hl-blu">t &lt; －1</span> のとき ── 軸が区間の右外（パターン③）</div>
+      <div id="case3_ex"></div>
+      <div class="sub-note">軸 x＝1 が区間の右端 x＝t＋2 より右 → 最小値は右端 x＝t＋2 で生じる</div>
+    </div>
+  </div>
+
+  <div class="point-box">
+    <h4>✅ 答え（最小値のまとめ）</h4>
+    <div id="ans_summary"></div>
+  </div>
+
+  <div class="warn-box">
+    <b>⚠ 符号ミスに注意！</b><br>
+    x＝t を代入するとき：<span id="sub_left_warn"></span><br>
+    x＝t＋2 を代入するとき：<span id="sub_right_warn"></span><br>
+    展開・整理を丁寧に行いましょう。
+  </div>
+
+  <!-- ミニテスト① -->
+  <button class="mini-toggle-btn" id="tog1" onclick="toggleMini('mb1','tog1')">
+    <div class="left-part"><span>✏️</span><span>ミニテスト① ── 場合分けの境界と最小値</span></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="mini-prog-badge" id="badge1">0 / 3 問</span>
+      <span class="arrow">›</span>
+    </div>
+  </button>
+  <div class="mini-body" id="mb1"><div id="mq1"></div></div>
+</div>
+
+<!-- ══ 3．最大値 ══ -->
+<div class="section">
+  <h2>3．最大値の場合分け</h2>
+  <p>最大値は頂点から<strong>遠い方の端点</strong>で生じます。</p>
+
+  <div class="blue-box">
+    <b>📖 最大値のポイント</b><br>
+    上に開く（a＞0）放物線では、区間の端点のうち<strong>頂点から遠い方</strong>が最大値。<br>
+    頂点の位置が区間の中点より左か右かで、どちらの端点が「遠い方」かが変わります。
+  </div>
+
+  <div class="point-box">
+    <h4>✅ 最大値の判定</h4>
+    <p>区間の中点を <span id="midpoint"></span> とする。</p>
+    <div style="margin:10px 0" id="maxrule"></div>
+  </div>
+
+  <!-- ミニテスト② -->
+  <button class="mini-toggle-btn" id="tog2" onclick="toggleMini('mb2','tog2')">
+    <div class="left-part"><span>✏️</span><span>ミニテスト② ── 最大値の問題</span></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="mini-prog-badge" id="badge2">0 / 3 問</span>
+      <span class="arrow">›</span>
+    </div>
+  </button>
+  <div class="mini-body" id="mb2"><div id="mq2"></div></div>
+</div>
+
+<!-- ══ まとめ ══ -->
+<div class="section" style="background:var(--primary-l);border-color:#c7d2fe">
+  <h2>📋 まとめ</h2>
+  <table class="summary">
+    <tr><th>パターン</th><th>軸の位置</th><th>最小値を与える x</th></tr>
+    <tr><td>① 軸が左外</td><td>p &lt; t</td><td>x＝t（左端）</td></tr>
+    <tr><td>② 軸が区間内</td><td>t ≦ p ≦ t＋2</td><td>x＝p（頂点）→ 最小値 q</td></tr>
+    <tr><td>③ 軸が右外</td><td>p &gt; t＋2</td><td>x＝t＋2（右端）</td></tr>
+  </table>
+  <div class="tip" style="margin-top:14px">
+    <b>💡 手順の確認</b><br>
+    ① 標準形 y＝(x－p)²＋q に直す<br>
+    ② 境界 t＝p－2、t＝p で3ケースに分ける<br>
+    ③ 各ケースで最小値（最大値）を求め、t の式で表す
+  </div>
+  <div class="tip" style="margin-top:12px">
+    次の単元 KQU14 では、<strong>2次不等式（文字係数）</strong>── a の符号で解が変わる場合分けを学びます。
+  </div>
+</div>
+
+<div class="nav">
+  <a href="../kounin_math_index_koumin.html" class="btn btn-back">← 単元一覧へ</a>
+  <a href="./KQU13_drill.html" class="btn btn-next">演習へ進む →</a>
+</div>
+</div>
+
+<script>
+function k(e){return katex.renderToString(e,{throwOnError:false,displayMode:false});}
+function kd(e){return katex.renderToString(e,{throwOnError:false,displayMode:true});}
+
+document.getElementById('boundary_formula').innerHTML =
+  kd('\\text{境界①：} p = t \\Rightarrow t = p \\qquad \\text{境界②：} p = t+2 \\Rightarrow t = p-2');
+document.getElementById('boundary_ex').innerHTML =
+  k('\\text{軸 } x=1 = t \\Rightarrow t=1') + '　← 境界①<br>' +
+  k('\\text{軸 } x=1 = t+2 \\Rightarrow t=-1') + '　← 境界②';
+document.getElementById('case1_ex').innerHTML =
+  kd('m(t) = f(t) = (t-1)^2+2 = t^2-2t+3');
+document.getElementById('case2_ex').innerHTML =
+  kd('m(t) = 2 \\quad (\\text{頂点の } y \\text{ 座標})');
+document.getElementById('case3_ex').innerHTML =
+  kd('m(t) = f(t+2) = (t+2-1)^2+2 = (t+1)^2+2 = t^2+2t+3');
+document.getElementById('ans_summary').innerHTML =
+  kd('m(t) = \\begin{cases} t^2-2t+3 & (t > 1) \\\\ 2 & (-1 \\leq t \\leq 1) \\\\ t^2+2t+3 & (t < -1) \\end{cases}');
+document.getElementById('sub_left_warn').innerHTML =
+  k('f(t) = (t-1)^2+2') + '　→ t をそのまま代入';
+document.getElementById('sub_right_warn').innerHTML =
+  k('f(t+2) = (t+2-1)^2+2 = (t+1)^2+2') + '　→ t＋2 を代入';
+document.getElementById('midpoint').innerHTML =
+  k('\\dfrac{t+(t+2)}{2} = t+1');
+document.getElementById('maxrule').innerHTML =
+  kd('p < t+1 \\text{ のとき} \\Rightarrow \\text{右端 } x=t+2 \\text{ が最大値}') +
+  kd('p > t+1 \\text{ のとき} \\Rightarrow \\text{左端 } x=t \\text{ が最大値}');
+
+/* ══ 折り畳みトグル ══ */
+function toggleMini(bodyId, btnId){
+  var body=document.getElementById(bodyId);
+  var btn=document.getElementById(btnId);
+  var open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  btn.classList.toggle('open',!open);
+}
+
+/* ══ 花吹雪 ══ */
+var cvs=document.getElementById('confetti-canvas');
+var c2=cvs.getContext('2d');
+var parts=[];var animId=null;
+function resize(){cvs.width=window.innerWidth;cvs.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+function rndCol(){return['#4f46e5','#f59e0b','#059669','#0284c7','#dc2626','#ea580c'][Math.floor(Math.random()*6)];}
+function launchConfetti(){
+  for(var i=0;i<100;i++) parts.push({x:Math.random()*cvs.width,y:-10-Math.random()*50,w:7+Math.random()*7,h:4+Math.random()*4,color:rndCol(),vx:(Math.random()-.5)*4,vy:3+Math.random()*4,angle:Math.random()*Math.PI*2,spin:(Math.random()-.5)*.2,op:1});
+  if(!animId) animLoop();
+}
+function animLoop(){
+  c2.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.08;p.angle+=p.spin;p.op-=.009;c2.save();c2.globalAlpha=Math.max(0,p.op);c2.translate(p.x,p.y);c2.rotate(p.angle);c2.fillStyle=p.color;c2.fillRect(-p.w/2,-p.h/2,p.w,p.h);c2.restore();});
+  parts=parts.filter(function(p){return p.op>0&&p.y<cvs.height+50;});
+  if(parts.length>0){animId=requestAnimationFrame(animLoop);}else{animId=null;c2.clearRect(0,0,cvs.width,cvs.height);}
+}
+
+/* ══ ミニテストデータ ══ */
+var miniState={m1:{ok:0,solved:[false,false,false]},m2:{ok:0,solved:[false,false,false]}};
+
+function expl(steps){
+  return '<div class="expl-box">'+steps.map(function(s,i){
+    return '<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px"><span style="min-width:20px;height:20px;background:var(--green);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75em;font-weight:700;flex-shrink:0;margin-top:2px">'+(i+1)+'</span><span>'+s+'</span></div>';
+  }).join('')+'</div>';
+}
+
+var miniData={
+  m1:[
+    { q:'y＝(x－2)²－1　（t ≦ x ≦ t＋2）\n場合分けの境界となる t の値はどれか？',
+      choices:['t＝0 と t＝2','t＝1 と t＝2','t＝－1 と t＝2','t＝0 と t＝1'],
+      ans:0,
+      expl:expl(['軸 x＝2、区間の幅 2','境界① 軸＝左端：2＝t → <span class="expl-key">t＝2</span>','境界② 軸＝右端：2＝t＋2 → <span class="expl-key">t＝0</span>'])
+    },
+    { q:'y＝(x－1)²＋2　（t ≦ x ≦ t＋2）\nt ＞ 1 のとき最小値 m(t) はどれか？',
+      choices:['m(t)＝t²－2t＋3','m(t)＝2','m(t)＝t²＋2t＋3','m(t)＝t＋1'],
+      ans:0,
+      expl:expl(['t＞1 → 軸 x＝1 が区間の左外 → 最小値は左端 x＝t','f(t)＝(t－1)²＋2 を展開','<span class="expl-key">m(t)＝t²－2t＋3</span>'])
+    },
+    { q:'y＝(x－1)²＋2　（t ≦ x ≦ t＋2）\nt ＜ －1 のとき最小値 m(t) はどれか？',
+      choices:['m(t)＝t²＋2t＋3','m(t)＝2','m(t)＝t²－2t＋3','m(t)＝(t＋2)²＋2'],
+      ans:0,
+      expl:expl(['t＜－1 → 軸 x＝1 が区間の右外 → 最小値は右端 x＝t＋2','f(t＋2)＝(t＋2－1)²＋2＝(t＋1)²＋2','展開：<span class="expl-key">t²＋2t＋3</span>'])
+    }
+  ],
+  m2:[
+    { q:'y＝(x－2)²－1　（t ≦ x ≦ t＋2）\nt ＞ 2 のとき最小値 m(t) はどれか？',
+      choices:['m(t)＝t²－4t＋3','m(t)＝－1','m(t)＝t²＋1','m(t)＝(t＋2)²－1'],
+      ans:0,
+      expl:expl(['t＞2 → 軸 x＝2 が左外 → 最小値は左端 x＝t','f(t)＝(t－2)²－1＝t²－4t＋4－1','<span class="expl-key">m(t)＝t²－4t＋3</span>'])
+    },
+    { q:'y＝(x－1)²＋2　（t ≦ x ≦ t＋2）\nt ＞ 1 のとき最大値はどれか？',
+      choices:['(t＋2－1)²＋2＝(t＋1)²＋2','(t－1)²＋2','2（頂点の値）','t²＋1'],
+      ans:0,
+      expl:expl(['t＞1 → 軸 x＝1 が左外','左端 f(t)＝(t－1)²＋2、右端 f(t＋2)＝(t＋1)²＋2','t＞1 なら t＋1＞t－1 → 右端が頂点から遠い','<span class="expl-key">最大値 f(t＋2)＝(t＋1)²＋2</span>'])
+    },
+    { q:'y＝(x－1)²＋2　（t ≦ x ≦ t＋2）\nt ＜ 0 のとき最大値はどれか？',
+      choices:['(t－1)²＋2','(t＋1)²＋2','2','(t＋2)²＋2'],
+      ans:0,
+      expl:expl(['t＜0 → 区間の中点 t＋1＜1','軸 x＝1 が中点より右 → 左端が頂点から遠い','<span class="expl-key">最大値 f(t)＝(t－1)²＋2</span>'])
+    }
+  ]
+};
+
+function buildMini(containerId,groupId,qList){
+  var container=document.getElementById(containerId);
+  container.innerHTML='';
+  qList.forEach(function(q,qi){
+    var card=document.createElement('div');
+    card.className='mq-card';
+    card.id=groupId+'_card'+qi;
+    var qDiv=document.createElement('div');
+    qDiv.className='mq-q';
+    var num=document.createElement('span');
+    num.className='mq-num';num.textContent=qi+1;
+    var qTxt=document.createElement('span');
+    qTxt.innerHTML=q.q.replace(/\n/g,'<br>');
+    qDiv.appendChild(num);qDiv.appendChild(qTxt);
+    var choicesDiv=document.createElement('div');
+    choicesDiv.className='mq-choices';
+    q.choices.forEach(function(c,ci){
+      var btn=document.createElement('button');
+      btn.className='mq-btn';btn.innerHTML=c;
+      btn.addEventListener('click',function(){
+        if(miniState[groupId].solved[qi]) return;
+        choicesDiv.querySelectorAll('.mq-btn').forEach(function(b){b.disabled=true;});
+        var res=document.getElementById(groupId+'_res'+qi);
+        if(ci===q.ans){
+          btn.classList.add('correct');
+          res.className='mq-result ok show';
+          res.innerHTML='🎉 <strong>正解！</strong>'+q.expl;
+          card.classList.add('solved');
+          miniState[groupId].solved[qi]=true;
+          miniState[groupId].ok++;
+          updateBadge(groupId);
+          launchConfetti();
+        } else {
+          btn.classList.add('wrong');
+          choicesDiv.querySelectorAll('.mq-btn')[q.ans].classList.add('reveal');
+          res.className='mq-result ng show';
+          res.innerHTML='❌ <strong>残念！</strong>　正解は <strong>'+q.choices[q.ans]+'</strong> です。'+q.expl+
+            '<br><button class="retry-btn" onclick="resetQ(\''+groupId+'\','+qi+',\''+containerId+'\')">🔄 もう一度</button>';
+        }
+      });
+      choicesDiv.appendChild(btn);
+    });
+    var res=document.createElement('div');
+    res.className='mq-result';res.id=groupId+'_res'+qi;
+    card.appendChild(qDiv);card.appendChild(choicesDiv);card.appendChild(res);
+    container.appendChild(card);
+  });
+}
+
+function updateBadge(groupId){
+  var ok=miniState[groupId].ok;
+  var total=miniData[groupId].length;
+  var map={m1:'badge1',m2:'badge2'};
+  document.getElementById(map[groupId]).textContent=ok+' / '+total+' 問';
+}
+
+function resetQ(groupId,qi,containerId){
+  if(miniState[groupId].solved[qi]){miniState[groupId].ok--;miniState[groupId].solved[qi]=false;updateBadge(groupId);}
+  var card=document.getElementById(groupId+'_card'+qi);
+  card.classList.remove('solved');
+  card.querySelectorAll('.mq-btn').forEach(function(b){b.disabled=false;b.classList.remove('correct','wrong','reveal');});
+  document.getElementById(groupId+'_res'+qi).className='mq-result';
+}
+
+buildMini('mq1','m1',miniData.m1);
+buildMini('mq2','m2',miniData.m2);
+</script>
+</body>
+</html>
