@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KQU11 演習　平行移動・対称移動の応用</title>
+<style>
+:root{
+  --primary:#0f766e;--primary-d:#0d5c56;--primary-l:#f0fdfa;
+  --hint:#f59e0b;--hint-bg:#fffbeb;--warn:#dc2626;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --green:#059669;--green-l:#f0fdf4;--purple:#9333ea;--purple-l:#faf5ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'BIZ UDPGothic',sans-serif;line-height:1.8;font-size:15px;overflow-x:hidden}
+header{position:sticky;top:0;background:var(--primary);color:#fff;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10}
+header h1{margin:0;font-size:1.05em;font-weight:700}
+header .sub{font-size:.78em;opacity:.88;margin-top:2px}
+.steps{display:flex;background:#fff;border-bottom:1px solid var(--border)}
+.step{flex:1;text-align:center;padding:8px 4px;font-size:.78em;font-weight:700;color:var(--muted);border-bottom:3px solid var(--border)}
+.step.active{color:var(--primary);border-color:var(--primary)}
+.wrap{max-width:680px;margin:0 auto;padding:16px 16px 40px}
+.set-selector{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.set-btn{padding:8px 18px;border:2px solid var(--border);border-radius:8px;background:#fff;font-weight:700;cursor:pointer;font-size:.9em;color:var(--muted);transition:.15s}
+.set-btn.active{border-color:var(--primary);color:var(--primary);background:var(--primary-l)}
+.set-desc{font-size:.82em;color:var(--muted);margin-bottom:14px;padding:6px 10px;background:#f8fafc;border-radius:6px;border-left:3px solid var(--primary)}
+.drill-card{background:var(--card);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid var(--border)}
+.q-num{font-size:.82em;font-weight:700;color:var(--muted);margin-bottom:6px}
+.q-text{font-size:1.02em;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.7}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice{padding:11px 10px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:.92em;text-align:center;transition:.15s;font-weight:500;line-height:1.5}
+.choice:hover{border-color:var(--primary);background:var(--primary-l)}
+.choice.selected{border-color:var(--primary);background:var(--primary-l);color:var(--primary-d)}
+.choice.correct{border-color:var(--green);background:var(--green-l);color:#065f46;font-weight:700}
+.choice.wrong{border-color:var(--warn);background:#fef2f2;color:var(--warn);font-weight:700}
+.feedback{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.9em;line-height:2.1}
+.feedback.show{display:block}
+.feedback.ok-fb{background:var(--green-l);border-left:4px solid var(--green);color:#065f46}
+.feedback.ng-fb{background:#fef2f2;border-left:4px solid var(--warn);color:#991b1b}
+.fb-steps{margin-top:8px;background:#fff;border-radius:8px;padding:10px 12px;border:1px solid var(--border);font-size:.93em;line-height:2.3;color:var(--text)}
+.fb-key{background:#fef9c3;border-radius:3px;padding:0 3px;color:#92400e;font-weight:700}
+.submit-row{text-align:center;margin:20px 0 8px}
+.btn-submit{background:var(--primary);color:#fff;border:none;padding:13px 40px;border-radius:10px;font-size:1em;font-weight:700;cursor:pointer}
+.btn-submit:disabled{background:#94a3b8;cursor:default}
+.result-box{display:none;margin:16px 0;padding:20px;border-radius:12px;text-align:center;border:2px solid var(--border)}
+.result-box.show{display:block}
+.result-box.passed{border-color:var(--green);background:var(--green-l)}
+.result-box.failed{border-color:var(--hint);background:var(--hint-bg)}
+.result-msg{font-size:1.2em;font-weight:700;margin-bottom:6px}
+.result-score{font-size:2.2em;font-weight:700;color:var(--primary);margin:6px 0}
+.result-detail{font-size:.9em;color:var(--muted)}
+.nav{display:flex;gap:10px;margin-top:20px}
+.btn{display:block;padding:12px 16px;border-radius:10px;text-decoration:none;text-align:center;font-weight:700;font-size:.95em;flex:1}
+.btn-back{background:#f1f5f9;color:var(--muted)}
+.btn-next{background:var(--primary);color:#fff}
+@keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;animation:confetti-fall 2.5s ease-in forwards;pointer-events:none;z-index:9999}
+</style>
+</head>
+<body>
+<header>
+  <h1>KQU11　演習　平行移動・対称移動の応用</h1>
+  <div class="sub">平行移動・対称移動（x軸・y軸・原点）をマスターしよう</div>
+</header>
+<div class="steps">
+  <div class="step"><a href="KQU11_intro.html" style="color:inherit;text-decoration:none">① 解説</a></div>
+  <div class="step active">② 演習</div>
+  <div class="step"><a href="KQU11_check.html" style="color:inherit;text-decoration:none">③ 確認</a></div>
+</div>
+<div class="wrap">
+<div class="set-selector">
+  <button class="set-btn active" onclick="loadSet(0)">セットA</button>
+  <button class="set-btn" onclick="loadSet(1)">セットB</button>
+  <button class="set-btn" onclick="loadSet(2)">セットC</button>
+  <button class="set-btn" onclick="loadSet(3)">セットD</button>
+</div>
+<div class="set-desc" id="set-desc"></div>
+<div id="quiz-area"></div>
+<div class="submit-row">
+  <button class="btn-submit" id="btn-submit" onclick="grade()">採点する</button>
+</div>
+<div class="result-box" id="result">
+  <div class="result-msg" id="result-msg"></div>
+  <div class="result-score" id="result-score"></div>
+  <div class="result-detail" id="result-detail"></div>
+</div>
+<div class="nav">
+  <a href="KQU11_intro.html" class="btn btn-back">← 解説へ戻る</a>
+  <a href="KQU11_check.html" class="btn btn-next">確認テストへ →</a>
+</div>
+</div>
+<script>
+const SET_DESC=[
+  'セットA ── x軸・y軸・原点に対称移動した式を求める（基本）',
+  'セットB ── 平行移動した式を求める（復習＋発展）',
+  'セットC ── 平行移動と対称移動の組み合わせ',
+  'セットD ── 総合問題（公務員・看護学校レベル）',
+];
+const SETS=[
+  // ══ セットA：対称移動 ══
+  [
+    {
+      q:'y＝x²－4x－5 を x 軸に関して対称移動した式はどれか？',
+      choices:['y＝－x²＋4x＋5','y＝x²＋4x－5','y＝－x²－4x＋5','y＝x²－4x＋5'],
+      ans:0,
+      exp:'正解 <b>y＝－x²＋4x＋5</b>',
+      steps:['x 軸対称 → y を <span class="fb-key">－y</span> に置き換える','－y ＝ x²－4x－5','y ＝ －x²＋4x＋5','<span class="fb-key">全係数の符号が逆になる！</span>']
+    },
+    {
+      q:'y＝x²－2x－3 を y 軸に関して対称移動した式はどれか？',
+      choices:['y＝x²＋2x－3','y＝－x²＋2x－3','y＝x²－2x＋3','y＝－x²－2x－3'],
+      ans:0,
+      exp:'正解 <b>y＝x²＋2x－3</b>',
+      steps:['y 軸対称 → x を <span class="fb-key">－x</span> に置き換える','y ＝ (－x)²－2(－x)－3','y ＝ x²＋2x－3','<span class="fb-key">x の奇数次（1次）の係数だけ符号が変わる！</span>']
+    },
+    {
+      q:'y＝－2x²＋3x－1 を原点に関して対称移動した式はどれか？',
+      choices:['y＝2x²＋3x＋1','y＝2x²－3x＋1','y＝－2x²－3x＋1','y＝2x²＋3x－1'],
+      ans:0,
+      exp:'正解 <b>y＝2x²＋3x＋1</b>',
+      steps:['原点対称 → x を－x、y を <span class="fb-key">－y</span> に置き換える','－y ＝ －2(－x)²＋3(－x)－1 ＝ －2x²－3x－1','y ＝ 2x²＋3x＋1']
+    },
+    {
+      q:'y＝(x＋1)²＋1 を x 軸に対称移動した放物線の頂点はどれか？',
+      choices:['(－1, －1)','(1, 1)','(－1, 1)','(1, －1)'],
+      ans:0,
+      exp:'正解 <b>(－1, －1)</b>',
+      steps:['x 軸対称 → y を－y に置き換える','－y ＝ (x＋1)²＋1　→　y ＝ －(x＋1)²－1','標準形 y＝－(x－p)²＋q の頂点は (p, q)','→ 頂点は (－1, <span class="fb-key">－1</span>)　y 座標の符号が逆！']
+    },
+  ],
+  // ══ セットB：平行移動 ══
+  [
+    {
+      q:'y＝x²＋4x－1 を x 軸方向に 2、y 軸方向に 3 平行移動した式はどれか？',
+      choices:['y＝x²－2','y＝x²＋2','y＝x²＋8x－1','y＝x²－8x＋3'],
+      ans:0,
+      exp:'正解 <b>y＝x²－2</b>',
+      steps:['x を(x－2)、y を(y－3) に置き換える','y－3 ＝ (x－2)²＋4(x－2)－1','y－3 ＝ x²－4x＋4＋4x－8－1','y ＝ x²－2']
+    },
+    {
+      q:'y＝2x²－8x＋5 はどのように平行移動すれば y＝2x²＋4x＋7 に重なるか？',
+      choices:['x方向に－3、y方向に8','x方向に3、y方向に8','x方向に－3、y方向に－8','x方向に3、y方向に－8'],
+      ans:0,
+      exp:'正解 <b>x方向に－3、y方向に8</b>',
+      steps:['y＝2x²－8x＋5 を平方完成 → y＝2(x－2)²－3　頂点 (2, －3) スタート','y＝2x²＋4x＋7 を平方完成 → y＝2(x＋1)²＋5　頂点 (－1, 5) ゴール','移動量＝ゴール－スタート','x方向：－1－2＝<span class="fb-key">－3</span>　y方向：5－(－3)＝<span class="fb-key">8</span>']
+    },
+    {
+      q:'y＝－2x²＋4x－4 を x 軸方向に－3、y 軸方向に 1 平行移動した式はどれか？',
+      choices:['y＝－2x²－8x－9','y＝－2x²＋8x－9','y＝－2x²－8x＋9','y＝2x²＋8x－9'],
+      ans:0,
+      exp:'正解 <b>y＝－2x²－8x－9</b>',
+      steps:['x を(x＋3)、y を(y－1) に置き換える','y－1 ＝ －2(x＋3)²＋4(x＋3)－4','y－1 ＝ －2x²－12x－18＋4x＋12－4','y ＝ －2x²－8x－9']
+    },
+    {
+      q:'y＝3x²－6x＋4 を x 軸方向に 2、y 軸方向に－1 平行移動した式はどれか？',
+      choices:['y＝3x²－18x＋27','y＝3x²＋18x＋27','y＝3x²－18x－27','y＝3x²－6x＋27'],
+      ans:0,
+      exp:'正解 <b>y＝3x²－18x＋27</b>',
+      steps:['x を(x－2)、y を(y＋1) に置き換える','y＋1 ＝ 3(x－2)²－6(x－2)＋4','y＋1 ＝ 3x²－12x＋12－6x＋12＋4','y ＝ 3x²－18x＋27']
+    },
+  ],
+  // ══ セットC：平行移動＋対称移動 ══
+  [
+    {
+      q:'y＝x²＋2x－3 を x 軸方向に－3、y 軸方向に 3 平行移動してから原点対称移動した式はどれか？',
+      choices:['y＝－x²＋8x－15','y＝x²－8x＋15','y＝－x²－8x＋15','y＝x²＋8x＋15'],
+      ans:0,
+      exp:'正解 <b>y＝－x²＋8x－15</b>',
+      steps:['① 平行移動：x を(x＋3)、y を(y－3) に代入','y－3 ＝ (x＋3)²＋2(x＋3)－3 ＝ x²＋8x＋15　→　y ＝ x²＋8x＋15 ＋3... 修正：y＝x²＋8x＋15','② 原点対称：x を－x、y を－y に代入','－y ＝ x²－8x＋15　→　<span class="fb-key">y ＝ －x²＋8x－15</span>']
+    },
+    {
+      q:'y＝(x－2)²－3 を x 軸方向に－3、y 軸方向に 6 平行移動した式はどれか？',
+      choices:['y＝(x＋1)²＋3','y＝(x－1)²＋3','y＝(x＋1)²－3','y＝(x＋1)²＋9'],
+      ans:0,
+      exp:'正解 <b>y＝(x＋1)²＋3</b>',
+      steps:['x を(x＋3)、y を(y－6) に置き換える','y－6 ＝ {(x＋3)－2}²－3 ＝ (x＋1)²－3','y ＝ (x＋1)²－3＋6 ＝ <span class="fb-key">(x＋1)²＋3</span>']
+    },
+    {
+      q:'y＝－(x－3)²－1 を x 軸方向に－1、y 軸方向に 3 平行移動した式はどれか？',
+      choices:['y＝－(x－2)²＋2','y＝－(x＋2)²＋2','y＝－(x－4)²－2','y＝(x－2)²＋2'],
+      ans:0,
+      exp:'正解 <b>y＝－(x－2)²＋2</b>',
+      steps:['x を(x＋1)、y を(y－3) に置き換える','y－3 ＝ －{(x＋1)－3}²－1 ＝ －(x－2)²－1','y ＝ －(x－2)²－1＋3 ＝ <span class="fb-key">－(x－2)²＋2</span>']
+    },
+    {
+      q:'y＝2x²－4x＋4 を原点に関して対称移動した式はどれか？',
+      choices:['y＝－2x²－4x－4','y＝2x²＋4x＋4','y＝－2x²＋4x－4','y＝－2x²－4x＋4'],
+      ans:0,
+      exp:'正解 <b>y＝－2x²－4x－4</b>',
+      steps:['原点対称 → x を－x、y を－y に置き換える','－y ＝ 2(－x)²－4(－x)＋4 ＝ 2x²＋4x＋4','<span class="fb-key">y ＝ －2x²－4x－4</span>']
+    },
+  ],
+  // ══ セットD：総合 ══
+  [
+    {
+      q:'y＝x²－4x＋3 は y＝x²＋2x＋7 をどのように平行移動したものか？',
+      choices:['x方向に3、y方向に－7','x方向に－3、y方向に7','x方向に3、y方向に7','x方向に－3、y方向に－7'],
+      ans:0,
+      exp:'正解 <b>x方向に3、y方向に－7</b>',
+      steps:['y＝x²－4x＋3 ＝ (x－2)²－1　頂点 (2, －1) ゴール','y＝x²＋2x＋7 ＝ (x＋1)²＋6　頂点 (－1, 6) スタート','x方向：2－(－1)＝<span class="fb-key">3</span>　y方向：－1－6＝<span class="fb-key">－7</span>']
+    },
+    {
+      q:'y＝ax²＋bx＋c を x 軸方向に 3、y 軸方向に－2 平行移動しさらに x 軸対称すると y＝2x²－5x－4 になった。a, b, c は？',
+      choices:['a＝－2、b＝－7、c＝3','a＝2、b＝7、c＝－3','a＝－2、b＝7、c＝3','a＝2、b＝－7、c＝－3'],
+      ans:0,
+      exp:'正解 <b>a＝－2、b＝－7、c＝3</b>',
+      steps:['逆から解く：① x 軸対称を逆に（再び x 軸対称）','y＝2x²－5x－4 → y を－y → y＝－2x²＋5x＋4','② 平行移動を逆に（x方向－3、y方向＋2）','x を(x＋3)、y を(y－2) に代入','y－2 ＝ －2(x＋3)²＋5(x＋3)＋4','y ＝ <span class="fb-key">－2x²－7x＋3</span>']
+    },
+    {
+      q:'y＝x²－2x－3 と y 軸に関して線対称な式はどれか？',
+      choices:['y＝x²＋2x－3','y＝－x²＋2x＋3','y＝x²－2x＋3','y＝－x²－2x－3'],
+      ans:0,
+      exp:'正解 <b>y＝x²＋2x－3</b>',
+      steps:['y 軸対称 → x を－x に置き換える','y ＝ (－x)²－2(－x)－3 ＝ x²＋2x－3','<span class="fb-key">x の1次の係数（－2）だけ符号が変わる！</span>']
+    },
+    {
+      q:'y＝x²－4x－5 の x 軸対称のグラフの頂点はどれか？',
+      choices:['(2, 9)','(－2, 9)','(2, －9)','(－2, －9)'],
+      ans:0,
+      exp:'正解 <b>(2, 9)</b>',
+      steps:['y＝x²－4x－5 ＝ (x－2)²－9　頂点 (2, －9)','x 軸対称 → y を－y → y＝－(x－2)²＋9','新しい頂点：(2, <span class="fb-key">9</span>)　y 座標の符号が逆！']
+    },
+  ],
+];
+
+let currentSet=0;
+function loadSet(idx){
+  currentSet=idx;
+  document.querySelectorAll('.set-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.getElementById('set-desc').textContent=SET_DESC[idx];
+  document.getElementById('btn-submit').disabled=false;
+  document.getElementById('btn-submit').textContent='採点する';
+  document.getElementById('result').className='result-box';
+  const area=document.getElementById('quiz-area');
+  area.innerHTML='';
+  SETS[idx].forEach((q,i)=>{
+    const card=document.createElement('div');
+    card.className='drill-card';
+    card.dataset.q=i;
+    card.innerHTML=`
+      <div class="q-num">問 ${i+1}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="choices">${q.choices.map((c,j)=>`<button class="choice" data-i="${j}" onclick="pick(this,${i})">${c}</button>`).join('')}</div>
+      <div class="feedback" id="fb-${i}"></div>
+    `;
+    area.appendChild(card);
+  });
+}
+function pick(btn,qIdx){
+  const card=btn.closest('.drill-card');
+  if(card.dataset.chosen) return;
+  card.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  card.dataset.chosen=btn.dataset.i;
+}
+function grade(){
+  const qs=SETS[currentSet];
+  let correct=0;
+  qs.forEach((q,i)=>{
+    const card=document.querySelector(`.drill-card[data-q="${i}"]`);
+    const chosen=card.dataset.chosen;
+    if(!chosen){alert(`問${i+1}がまだ選択されていません`);return;}
+    const isOK=parseInt(chosen)===q.ans;
+    if(isOK) correct++;
+    card.querySelectorAll('.choice').forEach(b=>{
+      b.disabled=true;
+      if(parseInt(b.dataset.i)===q.ans) b.classList.add('correct');
+      if(parseInt(b.dataset.i)===parseInt(chosen)&&!isOK) b.classList.add('wrong');
+    });
+    const fb=document.getElementById(`fb-${i}`);
+    fb.innerHTML=q.exp+'<div class="fb-steps">'+q.steps.map(s=>`<div>${s}</div>`).join('')+'</div>';
+    fb.className='feedback show '+(isOK?'ok-fb':'ng-fb');
+  });
+  const passed=correct===qs.length;
+  const result=document.getElementById('result');
+  result.className='result-box show '+(passed?'passed':'failed');
+  document.getElementById('result-msg').textContent=passed?'🎉 全問正解！':'もう一度確認しましょう';
+  document.getElementById('result-score').textContent=`${correct} / ${qs.length}`;
+  document.getElementById('result-detail').textContent=passed?'次のセットや確認テストに進もう！':'解説を読んで別のセットにも挑戦してみよう。';
+  if(passed) confetti();
+  document.getElementById('btn-submit').disabled=true;
+  document.getElementById('btn-submit').textContent='採点済み';
+}
+function confetti(){
+  const colors=['#0f766e','#f59e0b','#059669','#0284c7','#9333ea'];
+  for(let i=0;i<60;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${colors[i%5]};animation-delay:${Math.random()*1.2}s;animation-duration:${2+Math.random()}s;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3500);
+  }
+}
+loadSet(0);
+</script>
+</body>
+</html>

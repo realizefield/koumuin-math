@@ -115,56 +115,9 @@ table.summary tr:nth-child(even) td{background:var(--primary-l)}
 </div>
 <div class="wrap">
 
-<!-- ══ 0．この単元を学ぶ前に ══ -->
-<div class="section">
-  <h2>0．この単元に入る前に ── 判別式とは何か？</h2>
-  <p>KQU12 では <strong>判別式 D</strong> を使って、二次関数がχ軸と交わるかどうかを調べます。<br>
-  まず「判別式って何？」を確認しましょう。</p>
-
-  <div class="blue-box">
-    <b>📖 解の公式の中に D が隠れている！</b><br>
-    二次方程式 <span id="intro_eq"></span> を解く解の公式は…<br>
-    <div style="text-align:center;margin:10px 0" id="intro_formula"></div>
-    この <span id="intro_d_part"></span> の部分、つまり <strong>√の中身</strong> を取り出したものが<strong>判別式 D</strong> です。
-  </div>
-
-  <div class="point-box">
-    <h4>✅ 判別式の定義</h4>
-    <div style="text-align:center;margin:8px 0;font-size:1.1em" id="intro_def"></div>
-    <p style="text-align:center;font-size:.9em;color:var(--muted)">解の公式の「√の中」だけを取り出した式です</p>
-  </div>
-
-  <p style="margin-top:12px">D の値の<strong>符号</strong>（正・ゼロ・負）を見るだけで、次の2つのことが一度にわかります。</p>
-
-  <div class="step-row" style="margin-top:14px">
-    <div class="step-num">①</div>
-    <div class="step-body">
-      <div class="step-title">二次方程式の解の個数</div>
-      <p>√の中がプラスなら解が2つ、ゼロなら1つ（重解）、<br>マイナスなら√が計算できないので解なし。</p>
-    </div>
-  </div>
-  <div class="step-row">
-    <div class="step-num">②</div>
-    <div class="step-body">
-      <div class="step-title">二次関数とχ軸の交点の個数</div>
-      <p>y＝ax²＋bx＋c のグラフがχ軸と<br>
-      2点で交わる・接する・交わらない、がわかります。</p>
-    </div>
-  </div>
-
-  <div class="warn-box">
-    <b>⚠ 二次不等式との関係</b><br>
-    二次不等式（例：x²－5x＋4 &gt; 0）を解くとき、まず<strong>因数分解または解の公式</strong>でχ軸との交点を求めますね。<br>
-    でも「因数分解できない」「交点があるかどうかわからない」ときに、<strong>判別式 D を先に調べる</strong>と、解き方の方針が決まります。<br>
-    <span class="hl-red">D &gt; 0 → 交点が2つある → いつも通り解ける</span><br>
-    <span style="color:var(--green);font-weight:700">D ＝ 0 → 1点で接する → 解が特殊な形になる</span><br>
-    <span style="color:var(--blue);font-weight:700">D &lt; 0 → 交点がない → 解は「すべての実数」か「解なし」</span>
-  </div>
-</div>
-
 <!-- ══ 1．判別式の復習 ══ -->
 <div class="section">
-  <h2>1．判別式 D のまとめ（D の正負と意味）</h2>
+  <h2>1．判別式 D とは？（復習）</h2>
   <p>二次方程式 <span id="eq1"></span> の解の個数は <strong>判別式 D</strong> で判断できます。</p>
 
   <div class="point-box">
@@ -396,20 +349,14 @@ table.summary tr:nth-child(even) td{background:var(--primary-l)}
 </div>
 
 <div class="nav">
-  <a href="../kounin_math_index_koumin.html" class="btn btn-back">← 単元一覧へ</a>
-  <a href="./KQU12_drill.html" class="btn btn-next">演習へ進む →</a>
+  <a href="index.html" class="btn btn-back">← 単元一覧へ</a>
+  <a href="KQU12_drill.html" class="btn btn-next">演習へ進む →</a>
 </div>
 </div><!-- /wrap -->
 
 <script>
 function k(e){return katex.renderToString(e,{throwOnError:false,displayMode:false});}
 function kd(e){return katex.renderToString(e,{throwOnError:false,displayMode:true});}
-
-/* 導入セクション */
-document.getElementById('intro_eq').innerHTML = k('ax^2+bx+c=0');
-document.getElementById('intro_formula').innerHTML = kd('x = \\frac{-b \\pm \\sqrt{\\boldsymbol{b^2-4ac}}}{2a}');
-document.getElementById('intro_d_part').innerHTML = k('b^2-4ac');
-document.getElementById('intro_def').innerHTML = kd('D = b^2 - 4ac');
 
 /* 解説レンダリング */
 document.getElementById('eq1').innerHTML = k('ax^2+bx+c=0');
