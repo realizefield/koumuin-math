@@ -753,9 +753,9 @@ function renderMath(){
 document.addEventListener('DOMContentLoaded',function(){
   renderMath();
   loadAllStatus();
-  // 前回のタブを復元
+  // 前回のタブを復元（デフォルトは初級）
   var saved=localStorage.getItem('koumin_qu_tab');
-  if(saved==='jo')switchTab('jo');
+  switchTab(saved==='jo' ? 'jo' : 'sho');
 });
 </script>
 
